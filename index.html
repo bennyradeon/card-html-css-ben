@@ -1,1597 +1,2347 @@
 <!DOCTYPE html>
-
 <html lang="id">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Modul Praktik: Profile Card HTML &amp; CSS (Kelas XI)</title>
-<link href="style.css" rel="stylesheet"/>
-<script defer="" src="app.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pusat Source Code Profile Card</title>
+  <style>
+    :root {
+      --bg: #eef2f7;
+      --panel: rgba(255,255,255,0.82);
+      --card: #f4f6fb;
+      --card-2: #ffffff;
+      --text: #1f2a44;
+      --muted: #6f7c95;
+      --line: #d9dfeb;
+      --green: #4d8b43;
+      --green-dark: #3d7235;
+      --blue: #4f7fc8;
+      --orange: #d98a33;
+      --purple: #7756b5;
+      --brown: #92694f;
+      --gray: #657082;
+      --shadow: 0 20px 50px rgba(31, 42, 68, 0.12);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --code-bg: #0f172a;
+      --code-muted: #94a3b8;
+      --yellow: #f0b33e;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(77,139,67,0.12), transparent 28%),
+        radial-gradient(circle at right, rgba(79,127,200,0.08), transparent 20%),
+        linear-gradient(180deg, #eef2f7 0%, #e8edf5 100%);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(10px);
+      background: rgba(238, 242, 247, 0.78);
+      border-bottom: 1px solid rgba(217, 223, 235, 0.8);
+    }
+
+    .topbar-inner,
+    .hero,
+    .section,
+    .footer {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.02rem;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--green), #6aa85d);
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(77, 139, 67, 0.26);
+    }
+
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav a,
+    .hero-btn,
+    .copy-btn,
+    .template-tab,
+    .mini-btn {
+      text-decoration: none;
+      border: 0;
+      cursor: pointer;
+      transition: 0.24s ease;
+      font: inherit;
+    }
+
+    .nav a {
+      color: var(--text);
+      background: rgba(255,255,255,0.75);
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(217,223,235,0.9);
+    }
+
+    .nav a:hover,
+    .template-tab:hover,
+    .copy-btn:hover,
+    .mini-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(31, 42, 68, 0.08);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
+      align-items: center;
+      padding: 38px 0 28px;
+    }
+
+    .hero-panel,
+    .info-card,
+    .template-view,
+    .code-panel,
+    .guide-card,
+    .palette-card,
+    .card-showcase {
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-xl);
+    }
+
+    .hero-panel {
+      padding: 34px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(77,139,67,0.10);
+      color: var(--green-dark);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    h1, h2, h3, h4, p { margin: 0; }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      line-height: 1.05;
+      margin-bottom: 14px;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-panel p {
+      color: var(--muted);
+      font-size: 1.06rem;
+      line-height: 1.7;
+      max-width: 62ch;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .hero-btn {
+      padding: 13px 18px;
+      border-radius: 16px;
+      font-weight: 700;
+    }
+
+    .hero-btn.primary {
+      background: var(--green);
+      color: #fff;
+      box-shadow: 0 16px 28px rgba(77, 139, 67, 0.28);
+    }
+
+    .hero-btn.secondary {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid rgba(217,223,235,0.9);
+    }
+
+    .info-card {
+      padding: 26px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .info-item {
+      background: rgba(255,255,255,0.86);
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(217,223,235,0.85);
+    }
+
+    .info-item small {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-size: 0.84rem;
+    }
+
+    .section {
+      padding: 20px 0 40px;
+      overflow-x: hidden;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 70ch;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+      min-width: 0;
+    }
+
+    .guide-card,
+    .palette-card {
+      padding: 22px;
+      position: sticky;
+      top: 90px;
+    }
+
+    .guide-card h3,
+    .palette-card h3,
+    .template-view h3,
+    .code-panel h3 {
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+    }
+
+    .guide-list,
+    .theme-list,
+    .edit-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .guide-item,
+    .theme-item,
+    .edit-item {
+      padding: 14px 15px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(217,223,235,0.82);
+    }
+
+    .theme-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: currentColor;
+      box-shadow: 0 0 0 5px rgba(0,0,0,0.04);
+    }
+
+    .template-view {
+      padding: 24px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .template-tab {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--text);
+      border: 1px solid rgba(217,223,235,0.9);
+      font-weight: 700;
+    }
+
+    .template-tab.active {
+      background: var(--green);
+      color: #fff;
+      border-color: var(--green);
+      box-shadow: 0 10px 20px rgba(77,139,67,0.24);
+    }
+
+    .card-showcase {
+      padding: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(245,247,252,0.96));
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+      min-width: 0;
+    }
+
+    .source-panel {
+      display: grid;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .code-panel {
+      overflow: hidden;
+    }
+
+    .code-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      background: #111827;
+      color: #fff;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .code-toolbar small { color: #cbd5e1; }
+
+    .copy-btn {
+      padding: 9px 14px;
+      border-radius: 12px;
+      background: #1f2937;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.15);
+      font-weight: 700;
+    }
+
+    pre {
+      margin: 0;
+      padding: 20px;
+      overflow: auto;
+      overflow-x: auto;
+      background: var(--code-bg);
+      color: #e2e8f0;
+      max-height: 520px;
+      max-width: 100%;
+      font-size: 0.93rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .edit-list strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .footer {
+      padding: 10px 0 48px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .student-card-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .student-card {
+      width: 100%;
+      max-width: 420px;
+      min-height: 760px;
+      background: #f6f7f9;
+      border-radius: 42px;
+      padding: 28px 24px 22px;
+      position: relative;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.10);
+      color: #28304a;
+      overflow: hidden;
+    }
+
+    .student-card .header-strip {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 24px;
+      background: #4d8b43;
+      display: none;
+    }
+
+    .student-card .badge {
+      position: absolute;
+      top: 30px;
+      right: 24px;
+      background: #4d8b43;
+      color: #fff;
+      border-radius: 999px;
+      padding: 12px 22px;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      display: none;
+    }
+
+    .student-card .avatar {
+      width: 168px;
+      height: 168px;
+      border-radius: 999px;
+      background: #c4cad7;
+      border: 8px solid rgba(255,255,255,0.82);
+      box-shadow: 0 16px 28px rgba(0,0,0,0.08);
+      display: grid;
+      place-items: center;
+      font-size: 4rem;
+      font-weight: 800;
+      color: #4c566f;
+      flex-shrink: 0;
+    }
+
+    .student-card .intro {
+      margin-top: 82px;
+      text-align: center;
+    }
+
+    .student-card h4 {
+      font-size: 3rem;
+      line-height: 1.03;
+      letter-spacing: -0.03em;
+      margin-bottom: 18px;
+      color: #212a43;
+    }
+
+    .student-card .subtitle {
+      font-size: 1.02rem;
+      line-height: 1.55;
+      color: #6c7893;
+      margin-bottom: 26px;
+    }
+
+    .student-card .divider {
+      height: 2px;
+      background: #dde2ea;
+      border-radius: 999px;
+      margin: 0 auto 22px;
+      width: 86%;
+    }
+
+    .student-card .section-title {
+      font-size: 1.05rem;
+      margin-bottom: 16px;
+      color: #3d4661;
+    }
+
+    .student-card .portfolio-list,
+    .student-card .skill-list,
+    .student-card .progress-list {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .student-card .portfolio-item,
+    .student-card .skill-item,
+    .student-card .progress-item {
+      background: #eef0f4;
+      border-radius: 18px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 1.05rem;
+      color: #30384e;
+    }
+
+    .student-card .icon {
+      font-size: 1.15rem;
+      width: 28px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .student-card .actions {
+      display: flex;
+      gap: 14px;
+    }
+
+    .student-card .action-btn {
+      background: #4d8b43;
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: 20px 24px;
+      font-size: 1.02rem;
+      width: 100%;
+      font-weight: 700;
+      box-shadow: 0 16px 26px rgba(77,139,67,0.20);
+    }
+
+    .student-card .mini-label {
+      position: absolute;
+      left: 22px;
+      bottom: 22px;
+      background: rgba(46,46,46,0.80);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      line-height: 1.3;
+    }
+
+    .student-card.layout-left .content-top {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      margin-top: 58px;
+      margin-bottom: 28px;
+      padding: 0 8px;
+    }
+
+    .student-card.layout-left .intro,
+    .student-card.layout-left.layout-progress .intro {
+      margin-top: 0;
+      text-align: left;
+    }
+
+    .student-card.layout-left .intro h4 { font-size: 2.3rem; }
+    .student-card.layout-left .subtitle { margin-bottom: 0; }
+    .student-card.layout-left .divider { width: 100%; }
+
+    .student-card.layout-top .avatar-center {
+      display: grid;
+      place-items: center;
+      margin-top: 56px;
+      margin-bottom: 28px;
+    }
+
+    .student-card.layout-top .main-content,
+    .student-card.layout-left .main-content {
+      padding: 0 14px 82px;
+    }
+
+    .student-card.layout-two .actions .action-btn { width: calc(50% - 7px); }
+
+    .student-card.layout-skill.glow {
+      box-shadow:
+        0 0 0 2px rgba(240, 179, 62, 0.18),
+        0 0 36px rgba(240, 179, 62, 0.40),
+        0 22px 46px rgba(0,0,0,0.10);
+    }
+
+    .student-card.layout-skill .skill-item .icon { color: #f09144; }
+
+    .student-card .glow-tag {
+      position: absolute;
+      right: 18px;
+      bottom: 68px;
+      background: var(--yellow);
+      color: #000;
+      font-weight: 900;
+      border-radius: 999px;
+      border: 3px solid rgba(255,255,255,0.75);
+      padding: 14px 22px;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+      display: none;
+    }
+
+    .student-card.layout-skill .glow-tag { display: inline-flex; gap: 8px; }
+
+    .student-card.layout-progress .progress-item {
+      display: block;
+      padding: 16px 16px 14px;
+    }
+
+    .student-card.layout-progress .progress-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 10px;
+      font-size: 1.02rem;
+    }
+
+    .student-card.layout-progress .track {
+      width: 100%;
+      height: 14px;
+      background: #d8dde6;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .student-card.layout-progress .bar {
+      height: 100%;
+      background: #62a657;
+      border-radius: 999px;
+    }
+
+    .student-card.theme-a { --accent: #4d8b43; }
+    .student-card.theme-b { --accent: #4f7fc8; }
+    .student-card.theme-c { --accent: #d98a33; }
+    .student-card.theme-d { --accent: #7756b5; }
+    .student-card.theme-e { --accent: #92694f; }
+    .student-card.theme-f { --accent: #6a7484; }
+
+    .student-card.theme-b .badge,
+    .student-card.theme-b .header-strip,
+    .student-card.theme-b .action-btn { background: #4f7fc8; }
+    .student-card.theme-c .badge,
+    .student-card.theme-c .header-strip,
+    .student-card.theme-c .action-btn { background: #d98a33; }
+    .student-card.theme-d .badge,
+    .student-card.theme-d .header-strip,
+    .student-card.theme-d .action-btn { background: #7756b5; }
+    .student-card.theme-e .badge,
+    .student-card.theme-e .header-strip,
+    .student-card.theme-e .action-btn { background: #92694f; }
+    .student-card.theme-f .badge,
+    .student-card.theme-f .header-strip,
+    .student-card.theme-f .action-btn { background: #6a7484; }
+
+    .student-card.has-badge .badge,
+    .student-card.has-strip .header-strip { display: block; }
+
+    .muted-note {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 1400px) {
+      .hero,
+      .layout,
+      .preview-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .guide-card,
+      .palette-card {
+        position: static;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner { align-items: start; }
+      .hero-panel,
+      .info-card,
+      .template-view,
+      .guide-card,
+      .palette-card { padding: 20px; }
+      .student-card { min-height: auto; }
+      .student-card.layout-left .content-top {
+        flex-direction: column;
+        align-items: start;
+      }
+      .student-card.layout-left .avatar { width: 150px; height: 150px; font-size: 3.4rem; }
+      .student-card.layout-left .intro h4,
+      .student-card h4 { font-size: 2.2rem; }
+      .student-card .actions { flex-direction: column; }
+      .student-card.layout-two .actions .action-btn { width: 100%; }
+      .student-card .glow-tag {
+        position: static;
+        margin-top: 6px;
+        display: inline-flex;
+      }
+      pre { max-height: 400px; }
+    }
+  </style>
 </head>
 <body>
-<header class="topbar">
-<div class="topbar__inner">
-<div class="brand">
-<div class="brand__mark">XI</div>
-<div class="brand__text">
-<div class="brand__title">Modul Praktik HTML &amp; CSS</div>
-<div class="brand__subtitle">Topik: Profile Card (kartu profil) — layout modern dan rapi</div>
-</div>
-</div>
-<div class="topbar__actions">
-<button aria-label="Ganti tema" class="btn btn--ghost" data-action="toggle-theme" type="button">
-          Tema
-        </button>
-<a class="btn" href="#tugas-sts">Tugas STS</a>
-</div>
-</div>
-</header>
-<main class="layout">
-<aside class="sidebar">
-<div class="panel">
-<h2 class="panel__title">Daftar Isi</h2>
-<nav class="nav">
-<a href="#tujuan">Tujuan Pembelajaran</a>
-<a href="#prasyarat">Prasyarat &amp; File</a>
-<a href="#demo">Demo Hasil</a>
-<a href="#bagian">Bagian Kode &amp; Penjelasan</a>
-<a href="#tahap">Tahapan Praktik (Berurutan)</a>
-<a href="#latihan">Latihan &amp; Soal (Pemanasan)</a>
-<a href="#tugas-sts">Tugas STS (Kreatif &amp; Mandiri)</a>
-<a href="#rubrik">Rubrik Penilaian</a>
-</nav>
-</div>
-<div class="panel panel--note">
-<h3 class="panel__title">Petunjuk Penggunaan</h3>
-<ol class="steps">
-<li>Buat folder proyek (mis. <code>profile-card</code>).</li>
-<li>Buat file: <code>index.html</code> dan <code>tag &lt;style&gt; di index.html</code>.</li>
-<li>Ikuti tahap 1–8 secara berurutan.</li>
-<li>Setiap tahap: tulis/rapikan kode, simpan file, lalu refresh browser untuk mengecek hasil.</li>
-</ol>
-</div>
-<div class="panel panel--mini">
-<div class="meta">
-<div class="meta__row"><span>Mapel</span><strong>Informatika / TIK</strong></div>
-<div class="meta__row"><span>Kelas</span><strong>XI</strong></div>
-<div class="meta__row"><span>Materi</span><strong>HTML + CSS dasar</strong></div>
-</div>
-</div>
-</aside>
-<section class="content">
-<section class="hero">
-<div class="hero__card">
-<h1>Profile Card: dari sederhana → lebih keren</h1>
-<p>
-            Pada pertemuan ini, Bapak/Ibu Guru akan memandu kalian untuk membuat <strong>kartu profil</strong> seperti yang sudah dipelajari di kelas,
-            lalu mengembangkannya menjadi tampilan yang lebih modern: rapi, responsif, ada efek hover, dan mudah dimodifikasi.
-          </p>
-<div class="hero__chips">
-<span class="chip">HTML Struktur</span>
-<span class="chip">CSS Box Model</span>
-<span class="chip">Flex / Centering</span>
-<span class="chip">Shadow &amp; Radius</span>
-<span class="chip">Hover &amp; Transition</span>
-</div>
-</div>
-<div class="hero__aside">
-<div class="card-preview">
-<div class="card-preview__badge">Demo</div>
-<div class="pcard">
-<h1 class="pcard__title">HELLO! SAYA SISWA XI</h1>
-<img alt="Foto Profil" class="pcard__img" height="120" src="https://picsum.photos/200?random=11" width="120"/>
-<p class="pcard__lead">Ini adalah website pertama saya.</p>
-<hr class="pcard__hr"/>
-<h3 class="pcard__h3">Tentang Saya</h3>
-<p class="pcard__text">Siswa kelas XI yang sedang semangat belajar HTML &amp; CSS.</p>
-<a class="pcard__btn" href="https://www.google.com" rel="noopener noreferrer" target="_blank">Lihat Profil Lengkap</a>
-</div>
-</div>
-</div>
-</section>
-<section class="section" id="tujuan">
-<h2>Tujuan Pembelajaran</h2>
-<ul class="bullets">
-<li>Peserta didik memahami struktur dasar HTML (<code>&lt;head&gt;</code>, <code>&lt;body&gt;</code>, heading, paragraf, gambar, tautan).</li>
-<li>Peserta didik mampu menerapkan CSS dasar untuk layout: <code>display</code>, <code>justify-content</code>, <code>padding</code>, <code>margin</code>, <code>border</code>, <code>border-radius</code>, dan <code>box-shadow</code>.</li>
-<li>Peserta didik mampu membuat tampilan kartu profil yang rapi, modern, dan responsif sederhana.</li>
-<li>Peserta didik mampu membuat variasi desain secara mandiri (kreatif) tanpa menyalin kode teman.</li>
-</ul>
-</section>
-<section class="section" id="prasyarat">
-<h2>Prasyarat &amp; File</h2>
-<div class="grid2">
-<div class="cardlite">
-<h3 class="subhead">File yang diperlukan</h3>
-<ul class="bullets">
-<li><code>index.html</code> — berisi struktur HTML.</li>
-<li>CSS ditulis di dalam tag <code>&lt;style&gt;</code> pada file <code>index.html</code>.</li>
-<li>(Opsional) <code>foto.jpg</code> — jika memakai foto lokal. Jika tidak, gunakan URL gambar.</li>
-</ul>
-</div>
-<div class="cardlite">
-<h3 class="subhead">Aturan praktik</h3>
-<ul class="bullets">
-<li>Tuliskan kode dengan rapi (indentasi).</li>
-<li>Setiap perubahan: simpan file → refresh browser.</li>
-<li>Gunakan komentar seperlunya untuk menandai bagian penting.</li>
-</ul>
-</div>
-</div>
-</section>
-<section class="section" id="demo">
-<h2>Demo Hasil</h2>
-<p>Silakan klik tombol preview untuk melihat hasil pada setiap tahap, lalu cocokkan dengan praktik kalian.</p>
-<div class="callout callout--info">
-<strong>Catatan:</strong> Preview di modul ini merender kode contoh (tidak membaca file di komputer Anda). Saat praktik, Anda tetap menulis di file <code>index.html</code> dan <code>tag &lt;style&gt; di index.html</code>.
-        </div>
-</section>
-<section class="section" id="bagian">
-<h2>Bagian Kode &amp; Penjelasan</h2>
-<div class="grid2">
-<div class="cardlite">
-<h3 class="subhead">Bagian HTML yang digunakan</h3>
-<div class="tablewrap">
-<table class="tmini">
-<thead>
-<tr><th>Tag</th><th>Fungsi</th><th>Contoh</th></tr>
-</thead>
-<tbody>
-<tr><td><code>&lt;div class="card"&gt;</code></td><td>Wadah utama kartu</td><td>Menampung seluruh isi profil</td></tr>
-<tr><td><code>&lt;h1&gt;</code></td><td>Judul utama</td><td>Nama / sapaan</td></tr>
-<tr><td><code>&lt;img&gt;</code></td><td>Menampilkan gambar</td><td>Foto profil</td></tr>
-<tr><td><code>&lt;p&gt;</code></td><td>Paragraf</td><td>Deskripsi singkat</td></tr>
-<tr><td><code>&lt;hr&gt;</code></td><td>Garis pemisah</td><td>Pemisah konten</td></tr>
-<tr><td><code>&lt;h3&gt;</code></td><td>Sub-judul</td><td>Bagian “Tentang Saya”</td></tr>
-<tr><td><code>&lt;a&gt;</code></td><td>Tautan</td><td>Link menuju profil lengkap</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="cardlite">
-<h3 class="subhead">Bagian CSS yang digunakan</h3>
-<div class="tablewrap">
-<table class="tmini">
-<thead>
-<tr><th>Properti</th><th>Fungsi</th><th>Keterangan</th></tr>
-</thead>
-<tbody>
-<tr><td><code>background-color</code></td><td>Warna latar</td><td>Untuk body dan card</td></tr>
-<tr><td><code>font-family</code></td><td>Jenis font</td><td>Font modern (system-ui)</td></tr>
-<tr><td><code>display: flex</code></td><td>Layout fleksibel</td><td>Memusatkan card</td></tr>
-<tr><td><code>justify-content</code></td><td>Rata horizontal</td><td>center</td></tr>
-<tr><td><code>padding</code></td><td>Jarak dalam</td><td>Membuat card lega</td></tr>
-<tr><td><code>border-radius</code></td><td>Sudut membulat</td><td>Gaya modern</td></tr>
-<tr><td><code>box-shadow</code></td><td>Bayangan</td><td>Efek timbul</td></tr>
-<tr><td><code>transition</code></td><td>Animasi halus</td><td>Efek hover</td></tr>
-<tr><td><code>transform: scale()</code></td><td>Perubahan ukuran</td><td>Hover tombol</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</section>
-<section class="section" id="tahap">
-<h2>Tahapan Praktik (Berurutan)</h2>
-<p>Kerjakan tahap 1 sampai 8 secara berurutan. Setiap tahap menambahkan fitur baru. Bagian baru pada kode ditandai dengan warna highlight.</p><div class="callout callout--info"><strong>Cara menyalin kode:</strong> gunakan tombol <em>Copy Kode Bersih</em> pada setiap blok kode. Tombol ini akan menyalin kode tanpa highlight, sehingga aman ditempel di file siswa.</div>
-<article class="stage" id="t1">
-<div class="stage__head">
-<h3>Tahap 1 — Struktur HTML Dasar</h3>
-<button class="btn btn--small js-preview" data-stage="1" type="button">Preview Tahap 1</button>
-</div>
-<div class="stage__body">
-<p><strong>Fokus:</strong> Membuat kerangka HTML, judul, paragraf, dan wadah <code>div.card</code>.</p><div class="legend"><strong>Penanda:</strong> baris dengan latar berwarna adalah <strong>kode baru pada tahap ini</strong>.</div><div class="callout callout--info"><strong>Satu file saja:</strong> pada tahap ini CSS ditulis di dalam <code>&lt;style&gt;</code> di bagian <code>&lt;head&gt;</code>. Jadi kalian cukup membuat <code>index.html</code>.</div><div class="callout callout--info"><strong>Catatan:</strong> Mulai tahap ini, kita sudah menyiapkan CSS dasar untuk membuat tampilan kartu terlihat jelas (background, padding, radius, shadow).</div>
-<div class="callout callout--warn"><strong>Catatan penting:</strong> Kalau kalian hanya menyalin HTML, kartu bisa terlihat seperti teks biasa. Pastikan CSS <code>.card</code> (Tahap 5) juga dibuat agar tampilan kartu muncul dengan benar.</div><h4>Kode index.html (Tahap 1)</h4>
-<div class="code-legend">Legenda: <span class="pill pill--new">Baris baru pada tahap ini</span></div>
-<div class="stage-explain"><h4>Tag dan bagian yang kalian pelajari</h4><div class="tablewrap"><table class="tmini"><thead><tr><th>Tag/Atribut</th><th>Fungsi</th></tr></thead><tbody><tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td>Memberi tahu browser bahwa ini dokumen HTML5. Wajib ditulis di baris paling atas.</td></tr><tr><td><code>&lt;html lang="id"&gt;</code></td><td>Membungkus seluruh halaman. Atribut lang membantu browser/aksesibilitas memahami bahasa halaman.</td></tr><tr><td><code>&lt;head&gt;</code></td><td>Bagian informasi halaman (judul tab, meta, dan CSS). Tidak tampil langsung di halaman.</td></tr><tr><td><code>&lt;meta charset="UTF-8"&gt;</code></td><td>Mengatur karakter agar tulisan Indonesia tampil normal.</td></tr><tr><td><code>&lt;meta name="viewport" ...&gt;</code></td><td>Agar tampilan menyesuaikan layar HP/laptop (responsif).</td></tr><tr><td><code>&lt;style&gt;</code></td><td>Tempat menulis CSS. Pada modul ini CSS kita gabungkan di file yang sama.</td></tr><tr><td><code>&lt;body&gt;</code></td><td>Isi yang tampak di layar (card, teks, gambar).</td></tr><tr><td><code>&lt;div class="card"&gt;</code></td><td>Wadah kartu. class="card" dipakai supaya CSS bisa menargetkan tampilan kartu.</td></tr><tr><td><code>&lt;h1&gt;</code></td><td>Judul utama pada kartu.</td></tr><tr><td><code>&lt;p&gt;</code></td><td>Paragraf/deskripsi.</td></tr></tbody></table></div></div><div class="codebar"><button class="btn btn--small btn--copy" data-action="copy-code" type="button">Copy Kode Bersih</button></div><pre class="code" data-raw='&lt;!DOCTYPE html&gt;
-&lt;html lang="id"&gt;
-&lt;head&gt;
-  &lt;meta charset="UTF-8" /&gt;
-  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
-  &lt;title&gt;Profile Card&lt;/title&gt;
-  &lt;style&gt;
-body{
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  background-color: #f7f7f7;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-.card{
-  width: 320px;
-  background: rgb(209, 255, 149);
-  padding: 24px;
-  border-radius: 16px;
-  text-align: center;
-  box-shadow: 0 8px 15px rgba(0,0,0,0.10);
-}
-&lt;/style&gt;
-&lt;/head&gt;
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">&lt;/&gt;</div>
+        <div>Pusat Source Code Profile Card</div>
+      </div>
+      <nav class="nav">
+        <a href="#template">Template</a>
+        <a href="#kode">Kode HTML + CSS</a>
+        <a href="#panduan">Panduan Edit</a>
+      </nav>
+    </div>
+  </header>
 
-&lt;body&gt;
-  &lt;div class="card"&gt;
-    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;
-    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;'><code><span class="code-line code-new">&lt;!DOCTYPE html&gt;</span>
-<span class="code-line code-new">&lt;html lang="id"&gt;</span>
-<span class="code-line code-new">&lt;head&gt;</span>
-<span class="code-line code-new">  &lt;meta charset="UTF-8" /&gt;</span>
-<span class="code-line code-new">  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</span>
-<span class="code-line code-new">  &lt;title&gt;Profile Card&lt;/title&gt;</span>
-<span class="code-line code-new">  &lt;style&gt;</span>
-<span class="code-line code-new">body{</span>
-<span class="code-line code-new">  margin: 0;</span>
-<span class="code-line code-new">  min-height: 100vh;</span>
-<span class="code-line code-new">  display: flex;</span>
-<span class="code-line code-new">  justify-content: center;</span>
-<span class="code-line code-new">  align-items: center;</span>
-<span class="code-line code-new">  padding: 24px;</span>
-<span class="code-line code-new">  background-color: #f7f7f7;</span>
-<span class="code-line code-new">  font-family: system-ui, -apple-system, sans-serif;</span>
-<span class="code-line code-new">}</span>
-<span class="code-line code-new">.card{</span>
-<span class="code-line code-new">  width: 320px;</span>
-<span class="code-line code-new">  background: rgb(209, 255, 149);</span>
-<span class="code-line code-new">  padding: 24px;</span>
-<span class="code-line code-new">  border-radius: 16px;</span>
-<span class="code-line code-new">  text-align: center;</span>
-<span class="code-line code-new">  box-shadow: 0 8px 15px rgba(0,0,0,0.10);</span>
-<span class="code-line code-new">}</span>
-<span class="code-line code-new">&lt;/style&gt;</span>
-<span class="code-line code-new">&lt;/head&gt;</span>
-<span class="code-line code-new"></span>
-<span class="code-line code-new">&lt;body&gt;</span>
-<span class="code-line code-new">  &lt;div class="card"&gt;</span>
-<span class="code-line code-new">    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;</span>
-<span class="code-line code-new">    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;</span>
-<span class="code-line code-new">  &lt;/div&gt;</span>
-<span class="code-line code-new">&lt;/body&gt;</span>
-<span class="code-line code-new">&lt;/html&gt;</span></code></pre>
-</div>
-</article>
-<article class="stage" id="t2">
-<div class="stage__head">
-<h3>Tahap 2 — Menambahkan Gambar Profil</h3>
-<button class="btn btn--small js-preview" data-stage="2" type="button">Preview Tahap 2</button>
-</div>
-<div class="stage__body">
-<p><strong>Fokus:</strong> Menggunakan tag <code>&lt;img&gt;</code> beserta atribut <code>src</code>, <code>width</code>, <code>height</code>, dan <code>alt</code>.</p><div class="legend"><strong>Penanda:</strong> baris dengan latar berwarna adalah <strong>kode baru pada tahap ini</strong>.</div><div class="callout callout--info"><strong>Satu file saja:</strong> pada tahap ini CSS ditulis di dalam <code>&lt;style&gt;</code> di bagian <code>&lt;head&gt;</code>. Jadi kalian cukup membuat <code>index.html</code>.</div><div class="callout callout--info"><strong>Catatan:</strong> Pada tahap ini, CSS ditambah untuk merapikan foto profil (lingkaran, border, dan object-fit).</div>
-<h4>Kode index.html (Tahap 2)</h4>
-<div class="code-legend">Legenda: <span class="pill pill--new">Baris baru pada tahap ini</span></div>
-<div class="stage-explain"><h4>Tag baru pada tahap ini</h4><div class="tablewrap"><table class="tmini"><thead><tr><th>Tag/Atribut</th><th>Fungsi</th></tr></thead><tbody><tr><td><code>&lt;img ... /&gt;</code></td><td>Menampilkan gambar/foto profil.</td></tr><tr><td><code>src</code></td><td>Lokasi file gambar. Jika pakai foto lokal, pastikan file foto ada satu folder dengan index.html.</td></tr><tr><td><code>alt</code></td><td>Teks pengganti kalau gambar gagal tampil. Wajib untuk aksesibilitas.</td></tr><tr><td><code>width &amp; height</code></td><td>Ukuran gambar. Pada CSS kita pastikan jadi lingkaran dan rapi.</td></tr></tbody></table></div></div><div class="codebar"><button class="btn btn--small btn--copy" data-action="copy-code" type="button">Copy Kode Bersih</button></div><pre class="code" data-raw='&lt;!DOCTYPE html&gt;
-&lt;html lang="id"&gt;
-&lt;head&gt;
-  &lt;meta charset="UTF-8" /&gt;
-  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
-  &lt;title&gt;Profile Card&lt;/title&gt;
-  &lt;style&gt;
-body{
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  background-color: #f7f7f7;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-.card{
-  width: 320px;
-  background: rgb(209, 255, 149);
-  padding: 24px;
-  border-radius: 16px;
-  text-align: center;
-  box-shadow: 0 8px 15px rgba(0,0,0,0.10);
-}
-img{
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 3px solid white;
-  object-fit: cover;
-  margin: 14px 0;
-}
-&lt;/style&gt;
-&lt;/head&gt;
+  <section class="hero">
+    <div class="hero-panel">
+      <div class="eyebrow">Proyek HTML &amp; CSS untuk siswa XI</div>
+      <h1>Website sumber belajar untuk membuat profile card sesuai soal STS.</h1>
+      <p>
+        Halaman ini dibuat agar siswa cukup <strong>copy–paste</strong> source code, lalu mengubah nama,
+        kelas, hobi, warna, isi portofolio, dan bonus sesuai kode tantangan. Struktur tugas pada website
+        referensi memuat kombinasi <strong>tema, layout, dan bonus</strong> untuk profile card portofolio. 
+        Setiap siswa harus menyesuaikan hasil dengan kode masing-masing. ([bennyradeon.github.io](https://bennyradeon.github.io/deskripsi-sts/))
+      </p>
+      <div class="hero-actions">
+        <a class="hero-btn primary" href="#kode">Lihat source code</a>
+        <a class="hero-btn secondary" href="#template">Lihat contoh template</a>
+      </div>
+    </div>
 
-&lt;body&gt;
-  &lt;div class="card"&gt;
-    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;
-    &lt;img src="foto.jpg" width="120" height="120" alt="Foto Profil" /&gt;
-    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;'><code><span class="code-line">&lt;!DOCTYPE html&gt;</span>
-<span class="code-line">&lt;html lang="id"&gt;</span>
-<span class="code-line">&lt;head&gt;</span>
-<span class="code-line">  &lt;meta charset="UTF-8" /&gt;</span>
-<span class="code-line">  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</span>
-<span class="code-line">  &lt;title&gt;Profile Card&lt;/title&gt;</span>
-<span class="code-line">  &lt;style&gt;</span>
-<span class="code-line">body{</span>
-<span class="code-line">  margin: 0;</span>
-<span class="code-line">  min-height: 100vh;</span>
-<span class="code-line">  display: flex;</span>
-<span class="code-line">  justify-content: center;</span>
-<span class="code-line">  align-items: center;</span>
-<span class="code-line">  padding: 24px;</span>
-<span class="code-line">  background-color: #f7f7f7;</span>
-<span class="code-line">  font-family: system-ui, -apple-system, sans-serif;</span>
-<span class="code-line">}</span>
-<span class="code-line">.card{</span>
-<span class="code-line">  width: 320px;</span>
-<span class="code-line">  background: rgb(209, 255, 149);</span>
-<span class="code-line">  padding: 24px;</span>
-<span class="code-line">  border-radius: 16px;</span>
-<span class="code-line">  text-align: center;</span>
-<span class="code-line">  box-shadow: 0 8px 15px rgba(0,0,0,0.10);</span>
-<span class="code-line">}</span>
-<span class="code-line code-new">img{</span>
-<span class="code-line code-new">  width: 120px;</span>
-<span class="code-line code-new">  height: 120px;</span>
-<span class="code-line code-new">  border-radius: 50%;</span>
-<span class="code-line code-new">  border: 3px solid white;</span>
-<span class="code-line code-new">  object-fit: cover;</span>
-<span class="code-line code-new">  margin: 14px 0;</span>
-<span class="code-line code-new">}</span>
-<span class="code-line">&lt;/style&gt;</span>
-<span class="code-line">&lt;/head&gt;</span>
-<span class="code-line"></span>
-<span class="code-line">&lt;body&gt;</span>
-<span class="code-line">  &lt;div class="card"&gt;</span>
-<span class="code-line">    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;</span>
-<span class="code-line code-new">    &lt;img src="foto.jpg" width="120" height="120" alt="Foto Profil" /&gt;</span>
-<span class="code-line">    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;</span>
-<span class="code-line">  &lt;/div&gt;</span>
-<span class="code-line">&lt;/body&gt;</span>
-<span class="code-line">&lt;/html&gt;</span></code></pre>
-</div>
-</article>
-<article class="stage" id="t3">
-<div class="stage__head">
-<h3>Tahap 3 — Menambahkan Pemisah dan Subbagian</h3>
-<button class="btn btn--small js-preview" data-stage="3" type="button">Preview Tahap 3</button>
-</div>
-<div class="stage__body">
-<p><strong>Fokus:</strong> Menambahkan <code>&lt;hr&gt;</code> sebagai garis pemisah dan membuat subjudul <code>&lt;h3&gt;</code>.</p><div class="legend"><strong>Penanda:</strong> baris dengan latar berwarna adalah <strong>kode baru pada tahap ini</strong>.</div><div class="callout callout--info"><strong>Satu file saja:</strong> pada tahap ini CSS ditulis di dalam <code>&lt;style&gt;</code> di bagian <code>&lt;head&gt;</code>. Jadi kalian cukup membuat <code>index.html</code>.</div><div class="callout callout--info"><strong>Catatan:</strong> Pada tahap ini, CSS ditambah untuk garis pemisah (<code>hr</code>) supaya terlihat halus dan rapi.</div>
-<h4>Kode index.html (Tahap 3)</h4>
-<div class="code-legend">Legenda: <span class="pill pill--new">Baris baru pada tahap ini</span></div>
-<div class="stage-explain"><h4>Tag baru pada tahap ini</h4><div class="tablewrap"><table class="tmini"><thead><tr><th>Tag/Atribut</th><th>Fungsi</th></tr></thead><tbody><tr><td><code>&lt;hr /&gt;</code></td><td>Garis pemisah. Dipakai untuk membagi bagian profil dan 'Tentang Saya'.</td></tr><tr><td><code>&lt;h3&gt;</code></td><td>Subjudul (judul kecil). Cocok untuk judul bagian di dalam card.</td></tr><tr><td><code>&lt;p&gt; (paragraf tambahan)</code></td><td>Menambah informasi singkat tentang diri.</td></tr></tbody></table></div></div><div class="codebar"><button class="btn btn--small btn--copy" data-action="copy-code" type="button">Copy Kode Bersih</button></div><pre class="code" data-raw='&lt;!DOCTYPE html&gt;
-&lt;html lang="id"&gt;
-&lt;head&gt;
-  &lt;meta charset="UTF-8" /&gt;
-  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
-  &lt;title&gt;Profile Card&lt;/title&gt;
-  &lt;style&gt;
-body{
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  background-color: #f7f7f7;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-.card{
-  width: 320px;
-  background: rgb(209, 255, 149);
-  padding: 24px;
-  border-radius: 16px;
-  text-align: center;
-  box-shadow: 0 8px 15px rgba(0,0,0,0.10);
-}
-img{
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 3px solid white;
-  object-fit: cover;
-  margin: 14px 0;
-}
-hr{
-  border: 0;
-  border-top: 1px solid rgba(0,0,0,0.12);
-  margin: 16px 0;
-}
-&lt;/style&gt;
-&lt;/head&gt;
+    <div class="info-card">
+      <div class="info-item">
+        <small>Ringkasan tugas</small>
+        Profile card menampilkan identitas siswa dan portofolio pribadi, serta mendorong penggunaan HTML dan CSS yang rapi seperti flexbox, padding, border-radius, dan hover. ([bennyradeon.github.io](https://bennyradeon.github.io/deskripsi-sts/))
+      </div>
+      <div class="info-item">
+        <small>Kombinasi kode</small>
+        Tema: A–F, Layout: 1–4, Bonus: X–Z. Kode menentukan gaya warna, susunan elemen, dan fitur tambahan. ([bennyradeon.github.io](https://bennyradeon.github.io/deskripsi-sts/))
+      </div>
+      <div class="info-item">
+        <small>Apa yang dinilai</small>
+        Kesesuaian dengan kode, kreativitas desain, kelengkapan konten minimal 3 item portofolio, serta laporan dan presentasi. ([bennyradeon.github.io](https://bennyradeon.github.io/deskripsi-sts/))
+      </div>
+    </div>
+  </section>
 
-&lt;body&gt;
-  &lt;div class="card"&gt;
-    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;
-    &lt;img src="foto.jpg" width="120" height="120" alt="Foto Profil" /&gt;
-    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;
-    &lt;hr /&gt;
-    &lt;h3&gt;Tentang Saya&lt;/h3&gt;
-    &lt;p&gt;Siswa kelas XI yang sedang semangat belajar HTML &amp; CSS.&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;'><code><span class="code-line">&lt;!DOCTYPE html&gt;</span>
-<span class="code-line">&lt;html lang="id"&gt;</span>
-<span class="code-line">&lt;head&gt;</span>
-<span class="code-line">  &lt;meta charset="UTF-8" /&gt;</span>
-<span class="code-line">  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</span>
-<span class="code-line">  &lt;title&gt;Profile Card&lt;/title&gt;</span>
-<span class="code-line">  &lt;style&gt;</span>
-<span class="code-line">body{</span>
-<span class="code-line">  margin: 0;</span>
-<span class="code-line">  min-height: 100vh;</span>
-<span class="code-line">  display: flex;</span>
-<span class="code-line">  justify-content: center;</span>
-<span class="code-line">  align-items: center;</span>
-<span class="code-line">  padding: 24px;</span>
-<span class="code-line">  background-color: #f7f7f7;</span>
-<span class="code-line">  font-family: system-ui, -apple-system, sans-serif;</span>
-<span class="code-line">}</span>
-<span class="code-line">.card{</span>
-<span class="code-line">  width: 320px;</span>
-<span class="code-line">  background: rgb(209, 255, 149);</span>
-<span class="code-line">  padding: 24px;</span>
-<span class="code-line">  border-radius: 16px;</span>
-<span class="code-line">  text-align: center;</span>
-<span class="code-line">  box-shadow: 0 8px 15px rgba(0,0,0,0.10);</span>
-<span class="code-line">}</span>
-<span class="code-line">img{</span>
-<span class="code-line">  width: 120px;</span>
-<span class="code-line">  height: 120px;</span>
-<span class="code-line">  border-radius: 50%;</span>
-<span class="code-line">  border: 3px solid white;</span>
-<span class="code-line">  object-fit: cover;</span>
-<span class="code-line">  margin: 14px 0;</span>
-<span class="code-line">}</span>
-<span class="code-line code-new">hr{</span>
-<span class="code-line code-new">  border: 0;</span>
-<span class="code-line code-new">  border-top: 1px solid rgba(0,0,0,0.12);</span>
-<span class="code-line code-new">  margin: 16px 0;</span>
-<span class="code-line code-new">}</span>
-<span class="code-line">&lt;/style&gt;</span>
-<span class="code-line">&lt;/head&gt;</span>
-<span class="code-line"></span>
-<span class="code-line">&lt;body&gt;</span>
-<span class="code-line">  &lt;div class="card"&gt;</span>
-<span class="code-line">    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;</span>
-<span class="code-line">    &lt;img src="foto.jpg" width="120" height="120" alt="Foto Profil" /&gt;</span>
-<span class="code-line">    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;</span>
-<span class="code-line code-new">    &lt;hr /&gt;</span>
-<span class="code-line code-new">    &lt;h3&gt;Tentang Saya&lt;/h3&gt;</span>
-<span class="code-line code-new">    &lt;p&gt;Siswa kelas XI yang sedang semangat belajar HTML &amp; CSS.&lt;/p&gt;</span>
-<span class="code-line">  &lt;/div&gt;</span>
-<span class="code-line">&lt;/body&gt;</span>
-<span class="code-line">&lt;/html&gt;</span></code></pre>
-</div>
-</article>
-<article class="stage" id="t4">
-<div class="stage__head">
-<h3>Tahap 4 — Menambahkan Tautan (Link)</h3>
-<button class="btn btn--small js-preview" data-stage="4" type="button">Preview Tahap 4</button>
-</div>
-<div class="stage__body">
-<p><strong>Fokus:</strong> Menggunakan tag <code>&lt;a&gt;</code> dengan atribut <code>href</code> dan <code>target</code>.</p><div class="legend"><strong>Penanda:</strong> baris dengan latar berwarna adalah <strong>kode baru pada tahap ini</strong>.</div><div class="callout callout--info"><strong>Satu file saja:</strong> pada tahap ini CSS ditulis di dalam <code>&lt;style&gt;</code> di bagian <code>&lt;head&gt;</code>. Jadi kalian cukup membuat <code>index.html</code>.</div><div class="callout callout--info"><strong>Catatan:</strong> Pada tahap ini, link dibuat seperti tombol dengan hover dan transisi.</div>
-<h4>Kode index.html (Tahap 4)</h4>
-<div class="code-legend">Legenda: <span class="pill pill--new">Baris baru pada tahap ini</span></div>
-<div class="stage-explain"><h4>Tag/atribut baru pada tahap ini</h4><div class="tablewrap"><table class="tmini"><thead><tr><th>Tag/Atribut</th><th>Fungsi</th></tr></thead><tbody><tr><td><code>&lt;a ...&gt;</code></td><td>Link/tautan. Pada CSS kita ubah tampilannya menjadi tombol.</td></tr><tr><td><code>href</code></td><td>Alamat tujuan link.</td></tr><tr><td><code>target="_blank"</code></td><td>Membuka link di tab baru.</td></tr><tr><td><code>rel="noopener noreferrer"</code></td><td>Pengamanan saat memakai target _blank (praktik yang baik).</td></tr></tbody></table></div></div><div class="codebar"><button class="btn btn--small btn--copy" data-action="copy-code" type="button">Copy Kode Bersih</button></div><pre class="code" data-raw='&lt;!DOCTYPE html&gt;
-&lt;html lang="id"&gt;
-&lt;head&gt;
-  &lt;meta charset="UTF-8" /&gt;
-  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
-  &lt;title&gt;Profile Card&lt;/title&gt;
-  &lt;style&gt;
-body{
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  background-color: #f7f7f7;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-.card{
-  width: 320px;
-  background: rgb(209, 255, 149);
-  padding: 24px;
-  border-radius: 16px;
-  text-align: center;
-  box-shadow: 0 8px 15px rgba(0,0,0,0.10);
-}
-img{
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 3px solid white;
-  object-fit: cover;
-  margin: 14px 0;
-}
-hr{
-  border: 0;
-  border-top: 1px solid rgba(0,0,0,0.12);
-  margin: 16px 0;
-}
-a{
-  display: inline-block;
-  margin-top: 14px;
-  padding: 10px 16px;
-  background-color: #111827;
-  color: white;
-  text-decoration: none;
-  border-radius: 12px;
-  transition: 0.25s;
-}
-a:hover{
-  background-color: #334155;
-  transform: scale(1.04);
-}
-&lt;/style&gt;
-&lt;/head&gt;
+  <section class="section" id="template">
+    <div class="section-head">
+      <div>
+        <h2>Template visual yang bisa dipilih siswa (versi fix preview VSCode)</h2>
+        <p>
+          Contoh di bawah dibuat mengikuti desain pada gambar yang Anda unggah: avatar lingkaran, teks besar,
+          badge di kanan atas, daftar portofolio, tombol hijau, label indikator di kiri bawah, serta variasi glow dan progress bar.
+          Versi ini sudah diperbaiki agar lebih stabil saat dibuka di preview VSCode maupun browser biasa.
+        </p>
+      </div>
+    </div>
 
-&lt;body&gt;
-  &lt;div class="card"&gt;
-    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;
-    &lt;img src="foto.jpg" width="120" height="120" alt="Foto Profil" /&gt;
-    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;
-    &lt;hr /&gt;
-    &lt;h3&gt;Tentang Saya&lt;/h3&gt;
-    &lt;p&gt;Siswa kelas XI yang sedang semangat belajar HTML &amp; CSS.&lt;/p&gt;
-    &lt;a href="https://www.google.com" target="_blank" rel="noopener noreferrer"&gt;Lihat Profil Lengkap&lt;/a&gt;
-  &lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;'><code><span class="code-line">&lt;!DOCTYPE html&gt;</span>
-<span class="code-line">&lt;html lang="id"&gt;</span>
-<span class="code-line">&lt;head&gt;</span>
-<span class="code-line">  &lt;meta charset="UTF-8" /&gt;</span>
-<span class="code-line">  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</span>
-<span class="code-line">  &lt;title&gt;Profile Card&lt;/title&gt;</span>
-<span class="code-line">  &lt;style&gt;</span>
-<span class="code-line">body{</span>
-<span class="code-line">  margin: 0;</span>
-<span class="code-line">  min-height: 100vh;</span>
-<span class="code-line">  display: flex;</span>
-<span class="code-line">  justify-content: center;</span>
-<span class="code-line">  align-items: center;</span>
-<span class="code-line">  padding: 24px;</span>
-<span class="code-line">  background-color: #f7f7f7;</span>
-<span class="code-line">  font-family: system-ui, -apple-system, sans-serif;</span>
-<span class="code-line">}</span>
-<span class="code-line">.card{</span>
-<span class="code-line">  width: 320px;</span>
-<span class="code-line">  background: rgb(209, 255, 149);</span>
-<span class="code-line">  padding: 24px;</span>
-<span class="code-line">  border-radius: 16px;</span>
-<span class="code-line">  text-align: center;</span>
-<span class="code-line">  box-shadow: 0 8px 15px rgba(0,0,0,0.10);</span>
-<span class="code-line">}</span>
-<span class="code-line">img{</span>
-<span class="code-line">  width: 120px;</span>
-<span class="code-line">  height: 120px;</span>
-<span class="code-line">  border-radius: 50%;</span>
-<span class="code-line">  border: 3px solid white;</span>
-<span class="code-line">  object-fit: cover;</span>
-<span class="code-line">  margin: 14px 0;</span>
-<span class="code-line">}</span>
-<span class="code-line">hr{</span>
-<span class="code-line">  border: 0;</span>
-<span class="code-line">  border-top: 1px solid rgba(0,0,0,0.12);</span>
-<span class="code-line">  margin: 16px 0;</span>
-<span class="code-line">}</span>
-<span class="code-line code-new">a{</span>
-<span class="code-line code-new">  display: inline-block;</span>
-<span class="code-line code-new">  margin-top: 14px;</span>
-<span class="code-line code-new">  padding: 10px 16px;</span>
-<span class="code-line code-new">  background-color: #111827;</span>
-<span class="code-line code-new">  color: white;</span>
-<span class="code-line code-new">  text-decoration: none;</span>
-<span class="code-line code-new">  border-radius: 12px;</span>
-<span class="code-line code-new">  transition: 0.25s;</span>
-<span class="code-line code-new">}</span>
-<span class="code-line code-new">a:hover{</span>
-<span class="code-line code-new">  background-color: #334155;</span>
-<span class="code-line code-new">  transform: scale(1.04);</span>
-<span class="code-line code-new">}</span>
-<span class="code-line">&lt;/style&gt;</span>
-<span class="code-line">&lt;/head&gt;</span>
-<span class="code-line"></span>
-<span class="code-line">&lt;body&gt;</span>
-<span class="code-line">  &lt;div class="card"&gt;</span>
-<span class="code-line">    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;</span>
-<span class="code-line">    &lt;img src="foto.jpg" width="120" height="120" alt="Foto Profil" /&gt;</span>
-<span class="code-line">    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;</span>
-<span class="code-line">    &lt;hr /&gt;</span>
-<span class="code-line">    &lt;h3&gt;Tentang Saya&lt;/h3&gt;</span>
-<span class="code-line">    &lt;p&gt;Siswa kelas XI yang sedang semangat belajar HTML &amp; CSS.&lt;/p&gt;</span>
-<span class="code-line code-new">    &lt;a href="https://www.google.com" target="_blank" rel="noopener noreferrer"&gt;Lihat Profil Lengkap&lt;/a&gt;</span>
-<span class="code-line">  &lt;/div&gt;</span>
-<span class="code-line">&lt;/body&gt;</span>
-<span class="code-line">&lt;/html&gt;</span></code></pre>
-</div>
-</article>
-<article class="stage" id="t5">
-<div class="stage__head">
-<h3>Tahap 5 — Menambahkan CSS Dasar (Body &amp; Card)</h3>
-<button class="btn btn--small js-preview" data-stage="5" type="button">Preview Tahap 5</button>
-</div>
-<div class="stage__body">
-<p><strong>Fokus:</strong> Menambahkan <code>&lt;style&gt;</code> lalu mengatur tampilan <code>body</code> dan <code>.card</code> (warna, ukuran, padding, radius, shadow).</p><div class="legend"><strong>Penanda:</strong> baris dengan latar berwarna adalah <strong>kode baru pada tahap ini</strong>.</div><div class="callout callout--info"><strong>Satu file saja:</strong> pada tahap ini CSS ditulis di dalam <code>&lt;style&gt;</code> di bagian <code>&lt;head&gt;</code>. Jadi kalian cukup membuat <code>index.html</code>.</div><div class="callout callout--info"><strong>Catatan:</strong> Kode CSS pada tahap ini melanjutkan Tahap 4. Tambahan baru: merapikan ukuran judul (<code>h1</code>) dan jarak paragraf (<code>p</code>).</div>
-<h4>Kode index.html (Tahap 5)</h4>
-<div class="code-legend">Legenda: <span class="pill pill--new">Baris baru pada tahap ini</span></div>
-<div class="stage-explain"><h4>Penyempurnaan CSS (tipografi)</h4><div class="tablewrap"><table class="tmini"><thead><tr><th>Tag/Atribut</th><th>Fungsi</th></tr></thead><tbody><tr><td><code>h1 dan p (CSS)</code></td><td>Pada tahap ini kita rapikan ukuran judul dan jarak paragraf agar tampilan enak dibaca.</td></tr></tbody></table></div></div><div class="codebar"><button class="btn btn--small btn--copy" data-action="copy-code" type="button">Copy Kode Bersih</button></div><pre class="code" data-raw='&lt;!DOCTYPE html&gt;
-&lt;html lang="id"&gt;
-&lt;head&gt;
-  &lt;meta charset="UTF-8" /&gt;
-  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
-  &lt;title&gt;Profile Card&lt;/title&gt;
-  &lt;style&gt;
-body{
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  background-color: #f7f7f7;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-.card{
-  width: 320px;
-  background: rgb(209, 255, 149);
-  padding: 24px;
-  border-radius: 16px;
-  text-align: center;
-  box-shadow: 0 8px 15px rgba(0,0,0,0.10);
-}
-img{
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 3px solid white;
-  object-fit: cover;
-  margin: 14px 0;
-}
-hr{
-  border: 0;
-  border-top: 1px solid rgba(0,0,0,0.12);
-  margin: 16px 0;
-}
-a{
-  display: inline-block;
-  margin-top: 14px;
-  padding: 10px 16px;
-  background-color: #111827;
-  color: white;
-  text-decoration: none;
-  border-radius: 12px;
-  transition: 0.25s;
-}
-a:hover{
-  background-color: #334155;
-  transform: scale(1.04);
-}
-h1{
-  font-size: 1.15rem;
-  color: #1f2937;
-  margin: 0;
-}
-p{
-  margin: 10px 0 0;
-  color: rgba(31,41,55,.85);
-}
-&lt;/style&gt;
-&lt;/head&gt;
-
-&lt;body&gt;
-  &lt;div class="card"&gt;
-    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;
-    &lt;img src="foto.jpg" width="120" height="120" alt="Foto Profil" /&gt;
-    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;
-    &lt;hr /&gt;
-    &lt;h3&gt;Tentang Saya&lt;/h3&gt;
-    &lt;p&gt;Siswa kelas XI yang sedang semangat belajar HTML &amp; CSS.&lt;/p&gt;
-    &lt;a href="https://www.google.com" target="_blank" rel="noopener noreferrer"&gt;Lihat Profil Lengkap&lt;/a&gt;
-  &lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;'><code><span class="code-line">&lt;!DOCTYPE html&gt;</span>
-<span class="code-line">&lt;html lang="id"&gt;</span>
-<span class="code-line">&lt;head&gt;</span>
-<span class="code-line">  &lt;meta charset="UTF-8" /&gt;</span>
-<span class="code-line">  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</span>
-<span class="code-line">  &lt;title&gt;Profile Card&lt;/title&gt;</span>
-<span class="code-line">  &lt;style&gt;</span>
-<span class="code-line">body{</span>
-<span class="code-line">  margin: 0;</span>
-<span class="code-line">  min-height: 100vh;</span>
-<span class="code-line">  display: flex;</span>
-<span class="code-line">  justify-content: center;</span>
-<span class="code-line">  align-items: center;</span>
-<span class="code-line">  padding: 24px;</span>
-<span class="code-line">  background-color: #f7f7f7;</span>
-<span class="code-line">  font-family: system-ui, -apple-system, sans-serif;</span>
-<span class="code-line">}</span>
-<span class="code-line">.card{</span>
-<span class="code-line">  width: 320px;</span>
-<span class="code-line">  background: rgb(209, 255, 149);</span>
-<span class="code-line">  padding: 24px;</span>
-<span class="code-line">  border-radius: 16px;</span>
-<span class="code-line">  text-align: center;</span>
-<span class="code-line">  box-shadow: 0 8px 15px rgba(0,0,0,0.10);</span>
-<span class="code-line">}</span>
-<span class="code-line">img{</span>
-<span class="code-line">  width: 120px;</span>
-<span class="code-line">  height: 120px;</span>
-<span class="code-line">  border-radius: 50%;</span>
-<span class="code-line">  border: 3px solid white;</span>
-<span class="code-line">  object-fit: cover;</span>
-<span class="code-line">  margin: 14px 0;</span>
-<span class="code-line">}</span>
-<span class="code-line">hr{</span>
-<span class="code-line">  border: 0;</span>
-<span class="code-line">  border-top: 1px solid rgba(0,0,0,0.12);</span>
-<span class="code-line">  margin: 16px 0;</span>
-<span class="code-line">}</span>
-<span class="code-line">a{</span>
-<span class="code-line">  display: inline-block;</span>
-<span class="code-line">  margin-top: 14px;</span>
-<span class="code-line">  padding: 10px 16px;</span>
-<span class="code-line">  background-color: #111827;</span>
-<span class="code-line">  color: white;</span>
-<span class="code-line">  text-decoration: none;</span>
-<span class="code-line">  border-radius: 12px;</span>
-<span class="code-line">  transition: 0.25s;</span>
-<span class="code-line">}</span>
-<span class="code-line">a:hover{</span>
-<span class="code-line">  background-color: #334155;</span>
-<span class="code-line">  transform: scale(1.04);</span>
-<span class="code-line">}</span>
-<span class="code-line code-new">h1{</span>
-<span class="code-line code-new">  font-size: 1.15rem;</span>
-<span class="code-line code-new">  color: #1f2937;</span>
-<span class="code-line code-new">  margin: 0;</span>
-<span class="code-line code-new">}</span>
-<span class="code-line code-new">p{</span>
-<span class="code-line code-new">  margin: 10px 0 0;</span>
-<span class="code-line code-new">  color: rgba(31,41,55,.85);</span>
-<span class="code-line code-new">}</span>
-<span class="code-line">&lt;/style&gt;</span>
-<span class="code-line">&lt;/head&gt;</span>
-<span class="code-line"></span>
-<span class="code-line">&lt;body&gt;</span>
-<span class="code-line">  &lt;div class="card"&gt;</span>
-<span class="code-line">    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;</span>
-<span class="code-line">    &lt;img src="foto.jpg" width="120" height="120" alt="Foto Profil" /&gt;</span>
-<span class="code-line">    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;</span>
-<span class="code-line">    &lt;hr /&gt;</span>
-<span class="code-line">    &lt;h3&gt;Tentang Saya&lt;/h3&gt;</span>
-<span class="code-line">    &lt;p&gt;Siswa kelas XI yang sedang semangat belajar HTML &amp; CSS.&lt;/p&gt;</span>
-<span class="code-line">    &lt;a href="https://www.google.com" target="_blank" rel="noopener noreferrer"&gt;Lihat Profil Lengkap&lt;/a&gt;</span>
-<span class="code-line">  &lt;/div&gt;</span>
-<span class="code-line">&lt;/body&gt;</span>
-<span class="code-line">&lt;/html&gt;</span></code></pre>
-</div>
-</article>
-<article class="stage" id="t6">
-<div class="stage__head">
-<h3>Tahap 6 — Merapikan Foto (CSS img)</h3>
-<button class="btn btn--small js-preview" data-stage="6" type="button">Preview Tahap 6</button>
-</div>
-<div class="stage__body">
-<p><strong>Fokus:</strong> Membuat foto profil berbentuk lingkaran dan rapi dengan <code>border-radius</code>, <code>border</code>, dan <code>object-fit</code>.</p><div class="legend"><strong>Penanda:</strong> baris dengan latar berwarna adalah <strong>kode baru pada tahap ini</strong>.</div><div class="callout callout--info"><strong>Satu file saja:</strong> pada tahap ini CSS ditulis di dalam <code>&lt;style&gt;</code> di bagian <code>&lt;head&gt;</code>. Jadi kalian cukup membuat <code>index.html</code>.</div><div class="callout callout--info"><strong>Catatan:</strong> Kode CSS tetap melanjutkan tahap sebelumnya. Tambahan baru: jarak judul kecil (<code>h3</code>) dibuat lebih konsisten.</div>
-<h4>Kode index.html (Tahap 6)</h4>
-<div class="code-legend">Legenda: <span class="pill pill--new">Baris baru pada tahap ini</span></div>
-<div class="stage-explain"><h4>Penyempurnaan CSS (subjudul)</h4><div class="tablewrap"><table class="tmini"><thead><tr><th>Tag/Atribut</th><th>Fungsi</th></tr></thead><tbody><tr><td><code>h3 (CSS)</code></td><td>Subjudul dibuat punya jarak yang konsisten terhadap elemen lain.</td></tr></tbody></table></div></div><div class="codebar"><button class="btn btn--small btn--copy" data-action="copy-code" type="button">Copy Kode Bersih</button></div><pre class="code" data-raw='&lt;!DOCTYPE html&gt;
-&lt;html lang="id"&gt;
-&lt;head&gt;
-  &lt;meta charset="UTF-8" /&gt;
-  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
-  &lt;title&gt;Profile Card&lt;/title&gt;
-  &lt;style&gt;
-body{
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  background-color: #f7f7f7;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-.card{
-  width: 320px;
-  background: rgb(209, 255, 149);
-  padding: 24px;
-  border-radius: 16px;
-  text-align: center;
-  box-shadow: 0 8px 15px rgba(0,0,0,0.10);
-}
-img{
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 3px solid white;
-  object-fit: cover;
-  margin: 14px 0;
-}
-hr{
-  border: 0;
-  border-top: 1px solid rgba(0,0,0,0.12);
-  margin: 16px 0;
-}
-a{
-  display: inline-block;
-  margin-top: 14px;
-  padding: 10px 16px;
-  background-color: #111827;
-  color: white;
-  text-decoration: none;
-  border-radius: 12px;
-  transition: 0.25s;
-}
-a:hover{
-  background-color: #334155;
-  transform: scale(1.04);
-}
-h1{
-  font-size: 1.15rem;
-  color: #1f2937;
-  margin: 0;
-}
-p{
-  margin: 10px 0 0;
-  color: rgba(31,41,55,.85);
-}
-h3{
-  margin: 10px 0 6px;
-}
-&lt;/style&gt;
-&lt;/head&gt;
-
-&lt;body&gt;
-  &lt;div class="card"&gt;
-    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;
-    &lt;img src="foto.jpg" width="120" height="120" alt="Foto Profil" /&gt;
-    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;
-    &lt;hr /&gt;
-    &lt;h3&gt;Tentang Saya&lt;/h3&gt;
-    &lt;p&gt;Siswa kelas XI yang sedang semangat belajar HTML &amp; CSS.&lt;/p&gt;
-    &lt;a href="https://www.google.com" target="_blank" rel="noopener noreferrer"&gt;Lihat Profil Lengkap&lt;/a&gt;
-  &lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;'><code><span class="code-line">&lt;!DOCTYPE html&gt;</span>
-<span class="code-line">&lt;html lang="id"&gt;</span>
-<span class="code-line">&lt;head&gt;</span>
-<span class="code-line">  &lt;meta charset="UTF-8" /&gt;</span>
-<span class="code-line">  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</span>
-<span class="code-line">  &lt;title&gt;Profile Card&lt;/title&gt;</span>
-<span class="code-line">  &lt;style&gt;</span>
-<span class="code-line">body{</span>
-<span class="code-line">  margin: 0;</span>
-<span class="code-line">  min-height: 100vh;</span>
-<span class="code-line">  display: flex;</span>
-<span class="code-line">  justify-content: center;</span>
-<span class="code-line">  align-items: center;</span>
-<span class="code-line">  padding: 24px;</span>
-<span class="code-line">  background-color: #f7f7f7;</span>
-<span class="code-line">  font-family: system-ui, -apple-system, sans-serif;</span>
-<span class="code-line">}</span>
-<span class="code-line">.card{</span>
-<span class="code-line">  width: 320px;</span>
-<span class="code-line">  background: rgb(209, 255, 149);</span>
-<span class="code-line">  padding: 24px;</span>
-<span class="code-line">  border-radius: 16px;</span>
-<span class="code-line">  text-align: center;</span>
-<span class="code-line">  box-shadow: 0 8px 15px rgba(0,0,0,0.10);</span>
-<span class="code-line">}</span>
-<span class="code-line">img{</span>
-<span class="code-line">  width: 120px;</span>
-<span class="code-line">  height: 120px;</span>
-<span class="code-line">  border-radius: 50%;</span>
-<span class="code-line">  border: 3px solid white;</span>
-<span class="code-line">  object-fit: cover;</span>
-<span class="code-line">  margin: 14px 0;</span>
-<span class="code-line">}</span>
-<span class="code-line">hr{</span>
-<span class="code-line">  border: 0;</span>
-<span class="code-line">  border-top: 1px solid rgba(0,0,0,0.12);</span>
-<span class="code-line">  margin: 16px 0;</span>
-<span class="code-line">}</span>
-<span class="code-line">a{</span>
-<span class="code-line">  display: inline-block;</span>
-<span class="code-line">  margin-top: 14px;</span>
-<span class="code-line">  padding: 10px 16px;</span>
-<span class="code-line">  background-color: #111827;</span>
-<span class="code-line">  color: white;</span>
-<span class="code-line">  text-decoration: none;</span>
-<span class="code-line">  border-radius: 12px;</span>
-<span class="code-line">  transition: 0.25s;</span>
-<span class="code-line">}</span>
-<span class="code-line">a:hover{</span>
-<span class="code-line">  background-color: #334155;</span>
-<span class="code-line">  transform: scale(1.04);</span>
-<span class="code-line">}</span>
-<span class="code-line">h1{</span>
-<span class="code-line">  font-size: 1.15rem;</span>
-<span class="code-line">  color: #1f2937;</span>
-<span class="code-line">  margin: 0;</span>
-<span class="code-line">}</span>
-<span class="code-line">p{</span>
-<span class="code-line">  margin: 10px 0 0;</span>
-<span class="code-line">  color: rgba(31,41,55,.85);</span>
-<span class="code-line">}</span>
-<span class="code-line code-new">h3{</span>
-<span class="code-line code-new">  margin: 10px 0 6px;</span>
-<span class="code-line code-new">}</span>
-<span class="code-line">&lt;/style&gt;</span>
-<span class="code-line">&lt;/head&gt;</span>
-<span class="code-line"></span>
-<span class="code-line">&lt;body&gt;</span>
-<span class="code-line">  &lt;div class="card"&gt;</span>
-<span class="code-line">    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;</span>
-<span class="code-line">    &lt;img src="foto.jpg" width="120" height="120" alt="Foto Profil" /&gt;</span>
-<span class="code-line">    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;</span>
-<span class="code-line">    &lt;hr /&gt;</span>
-<span class="code-line">    &lt;h3&gt;Tentang Saya&lt;/h3&gt;</span>
-<span class="code-line">    &lt;p&gt;Siswa kelas XI yang sedang semangat belajar HTML &amp; CSS.&lt;/p&gt;</span>
-<span class="code-line">    &lt;a href="https://www.google.com" target="_blank" rel="noopener noreferrer"&gt;Lihat Profil Lengkap&lt;/a&gt;</span>
-<span class="code-line">  &lt;/div&gt;</span>
-<span class="code-line">&lt;/body&gt;</span>
-<span class="code-line">&lt;/html&gt;</span></code></pre>
-</div>
-</article>
-<article class="stage" id="t7">
-<div class="stage__head">
-<h3>Tahap 7 — Menjadikan Link Seperti Tombol</h3>
-<button class="btn btn--small js-preview" data-stage="7" type="button">Preview Tahap 7</button>
-</div>
-<div class="stage__body">
-<p><strong>Fokus:</strong> Mengatur tag <code>&lt;a&gt;</code> agar tampak seperti tombol dengan padding, background, border-radius, dan hover.</p><div class="legend"><strong>Penanda:</strong> baris dengan latar berwarna adalah <strong>kode baru pada tahap ini</strong>.</div><div class="callout callout--info"><strong>Satu file saja:</strong> pada tahap ini CSS ditulis di dalam <code>&lt;style&gt;</code> di bagian <code>&lt;head&gt;</code>. Jadi kalian cukup membuat <code>index.html</code>.</div><div class="callout callout--info"><strong>Catatan:</strong> Kode CSS tetap melanjutkan tahap sebelumnya. Tambahan baru: efek hover pada <code>.card</code> agar terasa lebih modern.</div>
-<h4>Kode index.html (Tahap 7)</h4>
-<div class="code-legend">Legenda: <span class="pill pill--new">Baris baru pada tahap ini</span></div>
-<div class="stage-explain"><h4>Pengembangan tampilan</h4><div class="tablewrap"><table class="tmini"><thead><tr><th>Tag/Atribut</th><th>Fungsi</th></tr></thead><tbody><tr><td><code>.card:hover</code></td><td>Kartu diberi efek hover supaya terasa modern (naik sedikit saat mouse diarahkan).</td></tr></tbody></table></div></div><div class="codebar"><button class="btn btn--small btn--copy" data-action="copy-code" type="button">Copy Kode Bersih</button></div><pre class="code" data-raw='&lt;!DOCTYPE html&gt;
-&lt;html lang="id"&gt;
-&lt;head&gt;
-  &lt;meta charset="UTF-8" /&gt;
-  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
-  &lt;title&gt;Profile Card&lt;/title&gt;
-  &lt;style&gt;
-body{
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  background-color: #f7f7f7;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-.card{
-  width: 320px;
-  background: rgb(209, 255, 149);
-  padding: 24px;
-  border-radius: 16px;
-  text-align: center;
-  box-shadow: 0 8px 15px rgba(0,0,0,0.10);
-}
-img{
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 3px solid white;
-  object-fit: cover;
-  margin: 14px 0;
-}
-hr{
-  border: 0;
-  border-top: 1px solid rgba(0,0,0,0.12);
-  margin: 16px 0;
-}
-a{
-  display: inline-block;
-  margin-top: 14px;
-  padding: 10px 16px;
-  background-color: #111827;
-  color: white;
-  text-decoration: none;
-  border-radius: 12px;
-  transition: 0.25s;
-}
-a:hover{
-  background-color: #334155;
-  transform: scale(1.04);
-}
-h1{
-  font-size: 1.15rem;
-  color: #1f2937;
-  margin: 0;
-}
-p{
-  margin: 10px 0 0;
-  color: rgba(31,41,55,.85);
-}
-h3{
-  margin: 10px 0 6px;
-}
-.card{
-  transition: 0.25s;
-}
-.card:hover{
-  transform: translateY(-2px);
-}
-&lt;/style&gt;
-&lt;/head&gt;
-
-&lt;body&gt;
-  &lt;div class="card"&gt;
-    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;
-    &lt;img src="foto.jpg" width="120" height="120" alt="Foto Profil" /&gt;
-    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;
-    &lt;hr /&gt;
-    &lt;h3&gt;Tentang Saya&lt;/h3&gt;
-    &lt;p&gt;Siswa kelas XI yang sedang semangat belajar HTML &amp; CSS.&lt;/p&gt;
-    &lt;a href="https://www.google.com" target="_blank" rel="noopener noreferrer"&gt;Lihat Profil Lengkap&lt;/a&gt;
-  &lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;'><code><span class="code-line">&lt;!DOCTYPE html&gt;</span>
-<span class="code-line">&lt;html lang="id"&gt;</span>
-<span class="code-line">&lt;head&gt;</span>
-<span class="code-line">  &lt;meta charset="UTF-8" /&gt;</span>
-<span class="code-line">  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</span>
-<span class="code-line">  &lt;title&gt;Profile Card&lt;/title&gt;</span>
-<span class="code-line">  &lt;style&gt;</span>
-<span class="code-line">body{</span>
-<span class="code-line">  margin: 0;</span>
-<span class="code-line">  min-height: 100vh;</span>
-<span class="code-line">  display: flex;</span>
-<span class="code-line">  justify-content: center;</span>
-<span class="code-line">  align-items: center;</span>
-<span class="code-line">  padding: 24px;</span>
-<span class="code-line">  background-color: #f7f7f7;</span>
-<span class="code-line">  font-family: system-ui, -apple-system, sans-serif;</span>
-<span class="code-line">}</span>
-<span class="code-line">.card{</span>
-<span class="code-line">  width: 320px;</span>
-<span class="code-line">  background: rgb(209, 255, 149);</span>
-<span class="code-line">  padding: 24px;</span>
-<span class="code-line">  border-radius: 16px;</span>
-<span class="code-line">  text-align: center;</span>
-<span class="code-line">  box-shadow: 0 8px 15px rgba(0,0,0,0.10);</span>
-<span class="code-line">}</span>
-<span class="code-line">img{</span>
-<span class="code-line">  width: 120px;</span>
-<span class="code-line">  height: 120px;</span>
-<span class="code-line">  border-radius: 50%;</span>
-<span class="code-line">  border: 3px solid white;</span>
-<span class="code-line">  object-fit: cover;</span>
-<span class="code-line">  margin: 14px 0;</span>
-<span class="code-line">}</span>
-<span class="code-line">hr{</span>
-<span class="code-line">  border: 0;</span>
-<span class="code-line">  border-top: 1px solid rgba(0,0,0,0.12);</span>
-<span class="code-line">  margin: 16px 0;</span>
-<span class="code-line">}</span>
-<span class="code-line">a{</span>
-<span class="code-line">  display: inline-block;</span>
-<span class="code-line">  margin-top: 14px;</span>
-<span class="code-line">  padding: 10px 16px;</span>
-<span class="code-line">  background-color: #111827;</span>
-<span class="code-line">  color: white;</span>
-<span class="code-line">  text-decoration: none;</span>
-<span class="code-line">  border-radius: 12px;</span>
-<span class="code-line">  transition: 0.25s;</span>
-<span class="code-line">}</span>
-<span class="code-line">a:hover{</span>
-<span class="code-line">  background-color: #334155;</span>
-<span class="code-line">  transform: scale(1.04);</span>
-<span class="code-line">}</span>
-<span class="code-line">h1{</span>
-<span class="code-line">  font-size: 1.15rem;</span>
-<span class="code-line">  color: #1f2937;</span>
-<span class="code-line">  margin: 0;</span>
-<span class="code-line">}</span>
-<span class="code-line">p{</span>
-<span class="code-line">  margin: 10px 0 0;</span>
-<span class="code-line">  color: rgba(31,41,55,.85);</span>
-<span class="code-line">}</span>
-<span class="code-line">h3{</span>
-<span class="code-line">  margin: 10px 0 6px;</span>
-<span class="code-line">}</span>
-<span class="code-line code-new">.card{</span>
-<span class="code-line code-new">  transition: 0.25s;</span>
-<span class="code-line code-new">}</span>
-<span class="code-line code-new">.card:hover{</span>
-<span class="code-line code-new">  transform: translateY(-2px);</span>
-<span class="code-line code-new">}</span>
-<span class="code-line">&lt;/style&gt;</span>
-<span class="code-line">&lt;/head&gt;</span>
-<span class="code-line"></span>
-<span class="code-line">&lt;body&gt;</span>
-<span class="code-line">  &lt;div class="card"&gt;</span>
-<span class="code-line">    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;</span>
-<span class="code-line">    &lt;img src="foto.jpg" width="120" height="120" alt="Foto Profil" /&gt;</span>
-<span class="code-line">    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;</span>
-<span class="code-line">    &lt;hr /&gt;</span>
-<span class="code-line">    &lt;h3&gt;Tentang Saya&lt;/h3&gt;</span>
-<span class="code-line">    &lt;p&gt;Siswa kelas XI yang sedang semangat belajar HTML &amp; CSS.&lt;/p&gt;</span>
-<span class="code-line">    &lt;a href="https://www.google.com" target="_blank" rel="noopener noreferrer"&gt;Lihat Profil Lengkap&lt;/a&gt;</span>
-<span class="code-line">  &lt;/div&gt;</span>
-<span class="code-line">&lt;/body&gt;</span>
-<span class="code-line">&lt;/html&gt;</span></code></pre>
-</div>
-</article>
-<article class="stage" id="t8">
-<div class="stage__head">
-<h3>Tahap 8 — Pengembangan Keren (Variasi Tema + Responsif Ringan)</h3>
-<button class="btn btn--small js-preview" data-stage="8" type="button">Preview Tahap 8</button>
-</div>
-<div class="stage__body">
-<p><strong>Fokus:</strong> Membuat tampilan lebih modern dengan gradient halus, border lebih rapi, dan responsif sederhana.</p><div class="legend"><strong>Penanda:</strong> baris dengan latar berwarna adalah <strong>kode baru pada tahap ini</strong>.</div><div class="callout callout--info"><strong>Satu file saja:</strong> pada tahap ini CSS ditulis di dalam <code>&lt;style&gt;</code> di bagian <code>&lt;head&gt;</code>. Jadi kalian cukup membuat <code>index.html</code>.</div><div class="callout callout--info"><strong>Catatan:</strong> Kode CSS tetap melanjutkan tahap sebelumnya. Tambahan baru: background halaman dibuat lebih modern dengan gradient.</div>
-<h4>Kode index.html (Tahap 8)</h4>
-<div class="code-legend">Legenda: <span class="pill pill--new">Baris baru pada tahap ini</span></div>
-<div class="stage-explain"><h4>Pengembangan tampilan</h4><div class="tablewrap"><table class="tmini"><thead><tr><th>Tag/Atribut</th><th>Fungsi</th></tr></thead><tbody><tr><td><code>background gradient</code></td><td>Latar belakang halaman dibuat lebih modern menggunakan linear-gradient.</td></tr></tbody></table></div></div><div class="codebar"><button class="btn btn--small btn--copy" data-action="copy-code" type="button">Copy Kode Bersih</button></div><pre class="code" data-raw='&lt;!DOCTYPE html&gt;
-&lt;html lang="id"&gt;
-&lt;head&gt;
-  &lt;meta charset="UTF-8" /&gt;
-  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
-  &lt;title&gt;Profile Card&lt;/title&gt;
-  &lt;style&gt;
-body{
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  background-color: #f7f7f7;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-.card{
-  width: 320px;
-  background: rgb(209, 255, 149);
-  padding: 24px;
-  border-radius: 16px;
-  text-align: center;
-  box-shadow: 0 8px 15px rgba(0,0,0,0.10);
-}
-img{
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 3px solid white;
-  object-fit: cover;
-  margin: 14px 0;
-}
-hr{
-  border: 0;
-  border-top: 1px solid rgba(0,0,0,0.12);
-  margin: 16px 0;
-}
-a{
-  display: inline-block;
-  margin-top: 14px;
-  padding: 10px 16px;
-  background-color: #111827;
-  color: white;
-  text-decoration: none;
-  border-radius: 12px;
-  transition: 0.25s;
-}
-a:hover{
-  background-color: #334155;
-  transform: scale(1.04);
-}
-h1{
-  font-size: 1.15rem;
-  color: #1f2937;
-  margin: 0;
-}
-p{
-  margin: 10px 0 0;
-  color: rgba(31,41,55,.85);
-}
-h3{
-  margin: 10px 0 6px;
-}
-.card{
-  transition: 0.25s;
-}
-.card:hover{
-  transform: translateY(-2px);
-}
-body{
-  background: linear-gradient(180deg, #f7f7f7, #eef2ff);
-}
-&lt;/style&gt;
-&lt;/head&gt;
-
-&lt;body&gt;
-  &lt;div class="card"&gt;
-    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;
-    &lt;img src="foto.jpg" width="120" height="120" alt="Foto Profil" /&gt;
-    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;
-    &lt;hr /&gt;
-    &lt;h3&gt;Tentang Saya&lt;/h3&gt;
-    &lt;p&gt;Siswa kelas XI yang sedang semangat belajar HTML &amp; CSS.&lt;/p&gt;
-    &lt;a href="https://www.google.com" target="_blank" rel="noopener noreferrer"&gt;Lihat Profil Lengkap&lt;/a&gt;
-  &lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;'><code><span class="code-line">&lt;!DOCTYPE html&gt;</span>
-<span class="code-line">&lt;html lang="id"&gt;</span>
-<span class="code-line">&lt;head&gt;</span>
-<span class="code-line">  &lt;meta charset="UTF-8" /&gt;</span>
-<span class="code-line">  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</span>
-<span class="code-line">  &lt;title&gt;Profile Card&lt;/title&gt;</span>
-<span class="code-line">  &lt;style&gt;</span>
-<span class="code-line">body{</span>
-<span class="code-line">  margin: 0;</span>
-<span class="code-line">  min-height: 100vh;</span>
-<span class="code-line">  display: flex;</span>
-<span class="code-line">  justify-content: center;</span>
-<span class="code-line">  align-items: center;</span>
-<span class="code-line">  padding: 24px;</span>
-<span class="code-line">  background-color: #f7f7f7;</span>
-<span class="code-line">  font-family: system-ui, -apple-system, sans-serif;</span>
-<span class="code-line">}</span>
-<span class="code-line">.card{</span>
-<span class="code-line">  width: 320px;</span>
-<span class="code-line">  background: rgb(209, 255, 149);</span>
-<span class="code-line">  padding: 24px;</span>
-<span class="code-line">  border-radius: 16px;</span>
-<span class="code-line">  text-align: center;</span>
-<span class="code-line">  box-shadow: 0 8px 15px rgba(0,0,0,0.10);</span>
-<span class="code-line">}</span>
-<span class="code-line">img{</span>
-<span class="code-line">  width: 120px;</span>
-<span class="code-line">  height: 120px;</span>
-<span class="code-line">  border-radius: 50%;</span>
-<span class="code-line">  border: 3px solid white;</span>
-<span class="code-line">  object-fit: cover;</span>
-<span class="code-line">  margin: 14px 0;</span>
-<span class="code-line">}</span>
-<span class="code-line">hr{</span>
-<span class="code-line">  border: 0;</span>
-<span class="code-line">  border-top: 1px solid rgba(0,0,0,0.12);</span>
-<span class="code-line">  margin: 16px 0;</span>
-<span class="code-line">}</span>
-<span class="code-line">a{</span>
-<span class="code-line">  display: inline-block;</span>
-<span class="code-line">  margin-top: 14px;</span>
-<span class="code-line">  padding: 10px 16px;</span>
-<span class="code-line">  background-color: #111827;</span>
-<span class="code-line">  color: white;</span>
-<span class="code-line">  text-decoration: none;</span>
-<span class="code-line">  border-radius: 12px;</span>
-<span class="code-line">  transition: 0.25s;</span>
-<span class="code-line">}</span>
-<span class="code-line">a:hover{</span>
-<span class="code-line">  background-color: #334155;</span>
-<span class="code-line">  transform: scale(1.04);</span>
-<span class="code-line">}</span>
-<span class="code-line">h1{</span>
-<span class="code-line">  font-size: 1.15rem;</span>
-<span class="code-line">  color: #1f2937;</span>
-<span class="code-line">  margin: 0;</span>
-<span class="code-line">}</span>
-<span class="code-line">p{</span>
-<span class="code-line">  margin: 10px 0 0;</span>
-<span class="code-line">  color: rgba(31,41,55,.85);</span>
-<span class="code-line">}</span>
-<span class="code-line">h3{</span>
-<span class="code-line">  margin: 10px 0 6px;</span>
-<span class="code-line">}</span>
-<span class="code-line">.card{</span>
-<span class="code-line">  transition: 0.25s;</span>
-<span class="code-line">}</span>
-<span class="code-line">.card:hover{</span>
-<span class="code-line">  transform: translateY(-2px);</span>
-<span class="code-line">}</span>
-<span class="code-line code-new">body{</span>
-<span class="code-line code-new">  background: linear-gradient(180deg, #f7f7f7, #eef2ff);</span>
-<span class="code-line code-new">}</span>
-<span class="code-line">&lt;/style&gt;</span>
-<span class="code-line">&lt;/head&gt;</span>
-<span class="code-line"></span>
-<span class="code-line">&lt;body&gt;</span>
-<span class="code-line">  &lt;div class="card"&gt;</span>
-<span class="code-line">    &lt;h1&gt;HELLO! SAYA SISWA XI&lt;/h1&gt;</span>
-<span class="code-line">    &lt;img src="foto.jpg" width="120" height="120" alt="Foto Profil" /&gt;</span>
-<span class="code-line">    &lt;p&gt;Ini adalah website pertama saya.&lt;/p&gt;</span>
-<span class="code-line">    &lt;hr /&gt;</span>
-<span class="code-line">    &lt;h3&gt;Tentang Saya&lt;/h3&gt;</span>
-<span class="code-line">    &lt;p&gt;Siswa kelas XI yang sedang semangat belajar HTML &amp; CSS.&lt;/p&gt;</span>
-<span class="code-line">    &lt;a href="https://www.google.com" target="_blank" rel="noopener noreferrer"&gt;Lihat Profil Lengkap&lt;/a&gt;</span>
-<span class="code-line">  &lt;/div&gt;</span>
-<span class="code-line">&lt;/body&gt;</span>
-<span class="code-line">&lt;/html&gt;</span></code></pre>
-</div>
-</article>
-</section>
-<section class="section" id="latihan">
-<h2>Latihan &amp; Soal (Pemanasan)</h2>
-<div class="grid2">
-<div class="cardlite">
-<h3 class="subhead">Latihan Cepat (5–10 menit)</h3>
-<ol class="steps">
-<li>Ubah teks <code>&lt;h1&gt;</code> menjadi nama dan kelas Anda.</li>
-<li>Ubah <code>background</code> pada <code>.card</code> menjadi warna lain (mis. biru muda).</li>
-<li>Ubah ukuran foto menjadi <code>140x140</code>.</li>
-<li>Ubah teks tombol menjadi “Kunjungi Portofolio”.</li>
-<li>Ubah efek hover tombol menjadi lebih halus (mis. <code>scale(1.02)</code>).</li>
-</ol>
-</div>
-<div class="cardlite">
-<h3 class="subhead">Soal Pemahaman (Jawab Singkat)</h3>
-<ol class="steps">
-<li>Apa fungsi atribut <code>alt</code> pada tag <code>&lt;img&gt;</code>?</li>
-<li>Mengapa <code>display: inline-block</code> berguna saat membuat link menjadi tombol?</li>
-<li>Apa perbedaan <code>padding</code> dan <code>margin</code>?</li>
-<li>Apa fungsi <code>box-shadow</code> pada card?</li>
-<li>Apa fungsi <code>a:hover</code>?</li>
-</ol>
-</div>
-</div>
-<div class="cardlite">
-<h3 class="subhead">Soal Praktik Mudah (Dikerjakan di Lab)</h3>
-<p>Buat variasi dari kartu profil dengan ketentuan berikut:</p>
-<ul class="bullets">
-<li>Tambahkan satu teks baru: <strong>“Hobi Saya:”</strong> lalu isi hobinya.</li>
-<li>Tambahkan satu garis pemisah lagi (<code>&lt;hr&gt;</code>) sebelum tombol.</li>
-<li>Warna tombol berbeda dari contoh, tetapi tetap kontras dan terbaca.</li>
-<li>Tambahkan efek hover pada gambar (misalnya <code>transform: scale(1.03)</code>) dengan transisi.</li>
-</ul>
-</div>
-</section>
-<section class="section" id="tugas-sts">
-<h2>Tugas STS (Kreatif &amp; Mandiri)</h2>
-<div class="cardlite" style="margin-top:12px">
-<h3 class="subhead">Preview Contoh Hasil (Gambaran)</h3>
-<p class="muted">Contoh berikut hanya gambaran. Siswa tetap harus mengikuti <strong>kode tantangan</strong> yang diberikan guru agar hasil tiap siswa berbeda.</p>
-<div class="preview-grid">
-<div class="preview-item">
-<div class="preview-thumb">
-<div class="thumb-card thumb-card--left">
-<div class="thumb-photo"></div>
-<div class="thumb-text">
-<div class="thumb-title"></div>
-<div class="thumb-line"></div>
-<div class="thumb-line short"></div>
-<div class="thumb-btn"></div>
-</div>
-</div>
-</div>
-<div class="preview-meta">
-<strong>Contoh 1 — Layout Foto di Kiri</strong>
-<div class="muted small">Tema: Teknologi • Bonus: Badge</div>
-<button class="btn btn--small js-sts-preview" data-sample="sts1" type="button">Preview</button>
-</div>
-</div>
-<div class="preview-item">
-<div class="preview-thumb">
-<div class="thumb-card thumb-card--strip">
-<div class="thumb-strip"></div>
-<div class="thumb-body">
-<div class="thumb-photo circle"></div>
-<div class="thumb-title"></div>
-<div class="thumb-line"></div>
-<div class="thumb-btn"></div>
-</div>
-</div>
-</div>
-<div class="preview-meta">
-<strong>Contoh 2 — Header Strip</strong>
-<div class="muted small">Tema: Musik • Bonus: Hover Card</div>
-<button class="btn btn--small js-sts-preview" data-sample="sts2" type="button">Preview</button>
-</div>
-</div>
-<div class="preview-item">
-<div class="preview-thumb">
-<div class="thumb-card thumb-card--two">
-<div class="thumb-photo circle"></div>
-<div class="thumb-title"></div>
-<div class="thumb-line"></div>
-<div class="thumb-btn-row">
-<div class="thumb-btn"></div>
-<div class="thumb-btn ghost"></div>
-</div>
-</div>
-</div>
-<div class="preview-meta">
-<strong>Contoh 3 — Dua Tombol</strong>
-<div class="muted small">Tema: Kuliner • Bonus: Ikon sederhana</div>
-<button class="btn btn--small js-sts-preview" data-sample="sts3" type="button">Preview</button>
-</div>
-</div>
-<div class="preview-item">
-<div class="preview-thumb">
-<div class="thumb-card thumb-card--skills">
-<div class="thumb-photo circle"></div>
-<div class="thumb-title"></div>
-<div class="thumb-skill">
-<div class="thumb-skillbar w70"></div>
-</div>
-<div class="thumb-skill">
-<div class="thumb-skillbar w45"></div>
-</div>
-<div class="thumb-skill">
-<div class="thumb-skillbar w85"></div>
-</div>
-</div>
-</div>
-<div class="preview-meta">
-<strong>Contoh 4 — Daftar Skill</strong>
-<div class="muted small">Tema: Olahraga • Bonus: Progress Bar</div>
-<button class="btn btn--small js-sts-preview" data-sample="sts4" type="button">Preview</button>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout--warn">
-<strong>Tujuan penugasan:</strong> setiap peserta didik menghasilkan halaman web yang serupa konsepnya (kartu profil),
-          tetapi desain, isi, dan variasinya berbeda sehingga tidak dapat menyalin (copy) milik teman.
-        </div>
-<div class="cardlite" style="margin-top:12px">
-<h3 class="subhead">Preview Maksud Soal (Yang Diharapkan)</h3>
-<p class="muted">
-            Perhatikan contoh berikut. Inilah gambaran umum hasil akhir yang diharapkan: <strong>1 kartu utama</strong> di tengah halaman,
-            tampilan rapi, dan ada variasi sesuai kode tantangan.
-          </p>
-<div class="grid2">
-<div class="cardlite" style="background:rgba(255,255,255,.88)">
-<h4 class="subhead">Gambaran Output</h4>
-<div class="mini-stage">
-<div class="mini-card">
-<div class="mini-badge">XI • Tema Teknologi</div>
-<div class="mini-row">
-<div class="mini-photo"></div>
-<div class="mini-col">
-<div class="mini-title"></div>
-<div class="mini-line"></div>
-<div class="mini-line short"></div>
-<div class="mini-btn"></div>
-</div>
-</div>
-</div>
-</div>
-<div class="muted small" style="margin-top:8px">
-                Catatan: warna/tema/komponen bonus akan berbeda pada setiap siswa sesuai kode tantangan.
-              </div>
-</div>
-<div class="cardlite" style="background:rgba(255,255,255,.88)">
-<h4 class="subhead">Checklist Wajib (Dinilai)</h4>
-<ul class="bullets">
-<li>Halaman tidak melebar (tidak perlu geser kanan-kiri).</li>
-<li>Card berada di tengah (gunakan <code>display:flex</code> atau <code>display:grid</code>).</li>
-<li>Ada judul (<code>h1</code>), foto (<code>img</code>), deskripsi (<code>p</code>), dan subbagian (mis. <code>h3</code>).</li>
-<li>Tautan dibuat seperti tombol (CSS pada <code>a</code> + <code>:hover</code>).</li>
-<li>Minimal 8 properti CSS digunakan dengan benar.</li>
-<li>Variasi sesuai kode tantangan (warna + layout + bonus).</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="grid2">
-<div class="cardlite">
-<h3 class="subhead">Instruksi Umum (Wajib)</h3>
-<ol class="steps">
-<li>Buat 1 halaman <code>index.html</code> (boleh internal CSS di <code>&lt;style&gt;</code> atau eksternal <code>tag &lt;style&gt; di index.html</code>).</li>
-<li>Tampilkan satu <strong>kartu utama</strong> di tengah halaman (seperti materi).</li>
-<li>Kartu wajib berisi: <strong>Judul</strong>, <strong>Foto</strong>, <strong>Deskripsi</strong>, <strong>Bagian “Tentang”</strong>, dan <strong>Tombol link</strong>.</li>
-<li>Gunakan minimal 8 properti CSS dari materi (mis. flex, padding, radius, shadow, transition, hover).</li>
-</ol>
-</div>
-<div class="cardlite">
-<h3 class="subhead">Variasi Anti-Copy (Setiap Siswa Berbeda)</h3>
-<p>Setiap siswa wajib memilih <strong>1 Tema</strong> + <strong>1 Layout Variasi</strong> + <strong>1 Komponen Bonus</strong> dari daftar berikut.</p>
-<div class="pickers">
-<div class="picker">
-<div class="picker__title">Tema (pilih 1)</div>
-<ul class="bullets">
-<li>Tema “Olahraga”</li>
-<li>Tema “Musik”</li>
-<li>Tema “Kuliner”</li>
-<li>Tema “Game”</li>
-<li>Tema “Literasi/Book”</li>
-<li>Tema “Teknologi”</li>
-</ul>
-</div>
-<div class="picker">
-<div class="picker__title">Layout Variasi (pilih 1)</div>
-<ul class="bullets">
-<li>Foto di kiri, teks di kanan (gunakan flex).</li>
-<li>Card memiliki header warna di atas (strip).</li>
-<li>Card memiliki 2 tombol: “Profil” &amp; “Kontak”.</li>
-<li>Card memiliki daftar 3 skill (pakai <code>&lt;ul&gt;</code>).</li>
-</ul>
-</div>
-<div class="picker">
-<div class="picker__title">Komponen Bonus (pilih 1)</div>
-<ul class="bullets">
-<li>Tambahkan badge (mis. “XI RPL 1”).</li>
-<li>Tambahkan ikon sederhana (boleh pakai karakter).</li>
-<li>Tambahkan progress bar skill (CSS sederhana).</li>
-<li>Tambahkan efek hover pada card (mis. sedikit naik).</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="cardlite">
-<h3 class="subhead">Paket Tantangan (Agar Unik)</h3>
-<p>
-            Bapak/Ibu Guru akan membagikan <strong>Kode Tantangan</strong> per siswa. Kode ini menentukan kombinasi warna dan komponen yang wajib ada.
-            Peserta didik mengerjakan sesuai kode masing-masing.
-          </p>
-<div class="challenge">
-<div class="challenge__box">
-<div class="challenge__title">Generator Kode Tantangan (untuk contoh)</div>
-<div class="challenge__row">
-<button class="btn btn--small" data-action="gen-challenge" type="button">Buat Kode</button>
-<div class="challenge__code" id="challengeCode">—</div>
-</div>
-<div class="muted small">Guru dapat menuliskan kode berbeda untuk setiap siswa (mis. di papan). Siswa mengikuti aturan kode tersebut.</div>
-</div>
-<div class="challenge__rules">
-<h4 class="subhead">Cara membaca kode</h4>
-<ul class="bullets">
-<li><strong>Warna:</strong> Kode berawalan <code>A/B/C/D</code> menentukan warna card (guru sediakan palet).</li>
-<li><strong>Layout:</strong> Angka <code>1–4</code> menentukan variasi layout.</li>
-<li><strong>Bonus:</strong> Huruf <code>X/Y/Z</code> menentukan komponen bonus.</li>
-</ul>
-<div class="tablewrap">
-<table class="tmini">
-<thead><tr><th>Bagian</th><th>Opsi</th><th>Contoh</th></tr></thead>
-<tbody>
-<tr><td>Warna</td><td>A=Hijau, B=Biru, C=Ungu, D=Oranye</td><td>A2Y</td></tr>
-<tr><td>Layout</td><td>1=Foto kiri, 2=Header strip, 3=2 tombol, 4=Daftar skill</td><td>A2Y → layout 2</td></tr>
-<tr><td>Bonus</td><td>X=Badge, Y=Hover card, Z=Progress skill</td><td>A2Y → bonus Y</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="callout callout--info">
-<strong>Catatan pelaksanaan:</strong> Kalian tetap memakai konsep kartu profil, tetapi kombinasinya dibuat berbeda agar hasil karya mandiri. Dengan demikian, hasil akhir akan bervariasi dan lebih kreatif.
+    <div class="layout">
+      <div>
+        <div class="guide-card" id="panduan">
+          <h3>Panduan cepat untuk siswa</h3>
+          <div class="guide-list">
+            <div class="guide-item"><strong>1. Edit isi teks</strong> Ganti nama, kelas, deskripsi, portofolio, dan label badge.</div>
+            <div class="guide-item"><strong>2. Sesuaikan layout</strong> Pilih layout foto kiri, header strip, dua tombol, atau daftar skill sesuai kode tugas. Buka dengan browser atau Live Server agar preview lebih akurat.</div>
+            <div class="guide-item"><strong>3. Tambah bonus</strong> Badge untuk X, glow effect untuk Y, dan progress bar untuk Z. Semua contoh tetap satu file agar mudah dicoba.</div>
+            <div class="guide-item"><strong>4. Kreasikan tema</strong> Ubah warna hijau, biru, oranye, ungu, coklat, atau abu-abu berdasarkan tema A–F.</div>
           </div>
-</div>
-</section>
-<section class="section" id="rubrik">
-<h2>Rubrik Penilaian</h2>
-<div class="tablewrap">
-<table class="tmini">
-<thead>
-<tr><th>Aspek</th><th>Bobot</th><th>Kriteria</th></tr>
-</thead>
-<tbody>
-<tr><td>Struktur HTML</td><td>30%</td><td>Tag lengkap, rapi, sesuai ketentuan (judul, foto, deskripsi, tentang, tombol).</td></tr>
-<tr><td>Penerapan CSS</td><td>35%</td><td>Minimal 8 properti CSS, layout rapi, card di tengah, tombol jelas, hover/transition berfungsi.</td></tr>
-<tr><td>Kreativitas</td><td>20%</td><td>Variasi tema/layout/bonus sesuai kode tantangan; tampilan menarik dan berbeda.</td></tr>
-<tr><td>Kerapian &amp; Konsistensi</td><td>15%</td><td>Indentasi rapi, penamaan class konsisten, warna kontras, mudah dibaca.</td></tr>
-</tbody>
-</table>
-</div>
-<div class="footer">
-<small>Modul ini disusun untuk pembelajaran praktik HTML &amp; CSS Kelas XI.</small>
-</div>
-</section>
-<!-- Preview Modal -->
-<div aria-hidden="true" class="modal" hidden="" id="previewModal">
-<div class="modal__backdrop" data-close="true"></div>
-<div aria-labelledby="previewTitle" aria-modal="true" class="modal__dialog" role="dialog">
-<div class="modal__header">
-<div class="modal__title" id="previewTitle">Preview</div>
-<button aria-label="Tutup" class="modal__close" data-close="true" type="button">✕</button>
-</div>
-<div class="modal__body">
-<iframe class="modal__frame" id="previewFrame" sandbox="allow-forms" title="Preview tahap"></iframe>
-</div>
-<div class="modal__footer">
-<div class="modal__note">Preview ini merender kode <code>index.html</code> pada tahap yang dipilih.</div>
-<button class="btn btn--ghost" data-close="true" type="button">Tutup</button>
-</div>
-</div>
-</div>
-</section>
-</main>
+        </div>
+
+        <div class="palette-card" style="margin-top: 18px;">
+          <h3>Kode tema warna</h3>
+          <div class="theme-list">
+            <div class="theme-item"><div class="theme-chip" style="color:#4d8b43"><span class="dot"></span>A – Olahraga</div><div class="muted-note">Hijau</div></div>
+            <div class="theme-item"><div class="theme-chip" style="color:#4f7fc8"><span class="dot"></span>B – Musik</div><div class="muted-note">Biru</div></div>
+            <div class="theme-item"><div class="theme-chip" style="color:#d98a33"><span class="dot"></span>C – Kuliner</div><div class="muted-note">Oranye</div></div>
+            <div class="theme-item"><div class="theme-chip" style="color:#7756b5"><span class="dot"></span>D – Game</div><div class="muted-note">Ungu</div></div>
+            <div class="theme-item"><div class="theme-chip" style="color:#92694f"><span class="dot"></span>E – Literasi</div><div class="muted-note">Coklat</div></div>
+            <div class="theme-item"><div class="theme-chip" style="color:#6a7484"><span class="dot"></span>F – Teknologi</div><div class="muted-note">Abu-abu</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="template-view">
+        <h3>Pilih template contoh</h3>
+        <div class="tabs">
+          <button class="template-tab active" data-template="header-badge">Header strip + badge</button>
+          <button class="template-tab" data-template="foto-kiri">Foto di kiri + badge</button>
+          <button class="template-tab" data-template="dua-tombol">Dua tombol</button>
+          <button class="template-tab" data-template="glow-skill">Daftar skill + glow</button>
+          <button class="template-tab" data-template="progress">Foto kiri + progress bar</button>
+        </div>
+
+        <div class="card-showcase">
+          <div class="preview-grid">
+            <div class="student-card-wrap" id="preview-area"></div>
+            <div class="source-panel" id="kode">
+              <div class="code-panel">
+                <div class="code-toolbar">
+                  <div>
+                    <h3 style="margin:0; font-size:1rem;">HTML</h3>
+                    <small>Salin lalu tempel ke file index.html</small>
+                  </div>
+                  <button class="copy-btn" data-copy="html-code">Copy HTML</button>
+                </div>
+                <pre><code id="html-code"></code></pre>
+              </div>
+
+              <div class="code-panel">
+                <div class="code-toolbar">
+                  <div>
+                    <h3 style="margin:0; font-size:1rem;">CSS Internal</h3>
+                    <small>CSS ditulis di dalam tag &lt;style&gt; agar siswa cukup memakai satu file</small>
+                  </div>
+                  <button class="copy-btn" data-copy="css-code">Copy CSS</button>
+                </div>
+                <pre><code id="css-code"></code></pre>
+              </div>
+
+              <div class="guide-card" style="position: static; padding:18px;">
+                <h3>Bagian yang mudah diedit</h3>
+                <div class="edit-list">
+                  <div class="edit-item"><strong>Nama siswa</strong> Ubah teks <code>Budi Santoso</code>.</div>
+                  <div class="edit-item"><strong>Deskripsi</strong> Ubah <code>Siswa XI RPL | Pecinta Olahraga</code> sesuai identitas.</div>
+                  <div class="edit-item"><strong>Isi portofolio</strong> Minimal 3 item karya atau skill.</div>
+                  <div class="edit-item"><strong>Warna tema</strong> Ganti nilai <code>background</code> tombol, badge, strip, dan progress bar.</div>
+                  <div class="edit-item"><strong>Foto</strong> Avatar lingkaran dapat diganti menggunakan <code>&lt;img&gt;</code>.</div>
+                  <div class="edit-item"><strong>Satu file saja</strong> Semua contoh memakai <code>&lt;style&gt;</code> di dalam <code>index.html</code>, jadi lebih mudah untuk pemula.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    Dibuat sebagai pusat belajar source code HTML dan CSS untuk proyek profile card. 
+    Siswa tinggal memilih contoh, salin kodenya, lalu modifikasi sesuai kode tugas masing-masing.
+  </footer>
+
+  <script>
+    const templates = {
+      "header-badge": {
+        preview: `
+          <article class="student-card layout-top theme-a has-badge has-strip">
+            <div class="header-strip"></div>
+            <div class="badge">XI RPL</div>
+            <div class="avatar-center"><div class="avatar">BS</div></div>
+            <div class="main-content intro">
+              <h4>Budi Santoso</h4>
+              <div class="subtitle">Siswa XI RPL | Pecinta Olahraga</div>
+              <div class="divider"></div>
+              <div class="section-title">Portofolio</div>
+              <div class="portfolio-list">
+                <div class="portfolio-item"><span class="icon">🧮</span><span>Aplikasi Catatan</span></div>
+                <div class="portfolio-item"><span class="icon">🖥️</span><span>Website Sekolah</span></div>
+                <div class="portfolio-item"><span class="icon">🎨</span><span>Desain Poster</span></div>
+              </div>
+              <div class="actions"><button class="action-btn">Lihat Profil</button></div>
+            </div>
+            
+          </article>
+        `,
+        html: `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Card Header Strip</title>
+  <style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e5e7eb;
+  font-family: Arial, sans-serif;
+}
+
+.student-card {
+  width: 360px;
+  background: #f6f7f9;
+  border-radius: 36px;
+  padding: 28px 22px 90px;
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.header-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 22px;
+  background: #4d8b43;
+}
+
+.badge {
+  position: absolute;
+  top: 30px;
+  right: 22px;
+  background: #4d8b43;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: bold;
+}
+
+.avatar-center {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #c3c9d6;
+  border: 8px solid #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 52px;
+  font-weight: bold;
+  color: #4d566f;
+}
+
+.intro {
+  text-align: center;
+  padding: 0 10px;
+}
+
+h1 {
+  margin: 22px 0 12px;
+  font-size: 42px;
+  color: #1f2942;
+}
+
+.subtitle {
+  color: #6c7893;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background: #d9dee7;
+  margin: 28px 0 20px;
+}
+
+.section-title {
+  text-align: left;
+  color: #3c4660;
+  margin-bottom: 14px;
+}
+
+.portfolio-item {
+  background: #eef0f4;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  text-align: left;
+  color: #2d354b;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 22px;
+  background: #4d8b43;
+  color: white;
+  font-size: 20px;
+  margin-top: 14px;
+}
+
+.mini-label {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  background: rgba(54, 54, 54, 0.85);
+  color: white;
+  padding: 11px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+  </style>
+</head>
+<body>
+  <div class="student-card layout-top has-badge has-strip">
+    <div class="header-strip"></div>
+    <div class="badge">XI RPL</div>
+
+    <div class="avatar-center">
+      <div class="avatar">BS</div>
+    </div>
+
+    <div class="main-content intro">
+      <h1>Budi Santoso</h1>
+      <p class="subtitle">Siswa XI RPL | Pecinta Olahraga</p>
+
+      <div class="divider"></div>
+
+      <h2 class="section-title">Portofolio</h2>
+      <div class="portfolio-list">
+        <div class="portfolio-item">🧮 Aplikasi Catatan</div>
+        <div class="portfolio-item">🖥️ Website Sekolah</div>
+        <div class="portfolio-item">🎨 Desain Poster</div>
+      </div>
+
+      <button class="action-btn">Lihat Profil</button>
+    </div>
+
+   
+  </div>
+</body>
+</html>`,
+        css: `body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e5e7eb;
+  font-family: Arial, sans-serif;
+}
+
+.student-card {
+  width: 360px;
+  background: #f6f7f9;
+  border-radius: 36px;
+  padding: 28px 22px 90px;
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.header-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 22px;
+  background: #4d8b43;
+}
+
+.badge {
+  position: absolute;
+  top: 30px;
+  right: 22px;
+  background: #4d8b43;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: bold;
+}
+
+.avatar-center {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #c3c9d6;
+  border: 8px solid #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 52px;
+  font-weight: bold;
+  color: #4d566f;
+}
+
+.intro {
+  text-align: center;
+  padding: 0 10px;
+}
+
+h1 {
+  margin: 22px 0 12px;
+  font-size: 42px;
+  color: #1f2942;
+}
+
+.subtitle {
+  color: #6c7893;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background: #d9dee7;
+  margin: 28px 0 20px;
+}
+
+.section-title {
+  text-align: left;
+  color: #3c4660;
+  margin-bottom: 14px;
+}
+
+.portfolio-item {
+  background: #eef0f4;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  text-align: left;
+  color: #2d354b;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 22px;
+  background: #4d8b43;
+  color: white;
+  font-size: 20px;
+  margin-top: 14px;
+}
+
+.mini-label {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  background: rgba(54, 54, 54, 0.85);
+  color: white;
+  padding: 11px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}`
+      },
+      "foto-kiri": {
+        preview: `
+          <article class="student-card layout-left theme-a has-badge">
+            <div class="badge">XI RPL</div>
+            <div class="main-content">
+              <div class="content-top">
+                <div class="avatar">BS</div>
+                <div class="intro">
+                  <h4>Budi<br>Santoso</h4>
+                  <div class="subtitle">Siswa XI RPL |<br>Pecinta Olahraga</div>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="section-title">Portofolio</div>
+              <div class="portfolio-list">
+                <div class="portfolio-item"><span class="icon">🧮</span><span>Aplikasi Catatan</span></div>
+                <div class="portfolio-item"><span class="icon">🖥️</span><span>Website Sekolah</span></div>
+                <div class="portfolio-item"><span class="icon">🎨</span><span>Desain Poster</span></div>
+              </div>
+              <div class="actions"><button class="action-btn">Lihat Profil</button></div>
+            </div>
+          </article>
+        `,
+        html: `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Card Foto Kiri</title>
+  <style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e5e7eb;
+  font-family: Arial, sans-serif;
+}
+
+.student-card {
+  width: 360px;
+  background: #f6f7f9;
+  border-radius: 36px;
+  padding: 30px 22px 90px;
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.12);
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: 28px;
+  right: 22px;
+  background: #4d8b43;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: bold;
+}
+
+.content-top {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-top: 58px;
+}
+
+.avatar {
+  width: 145px;
+  height: 145px;
+  border-radius: 50%;
+  background: #c3c9d6;
+  border: 8px solid #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  font-weight: bold;
+  color: #4d566f;
+  flex-shrink: 0;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 36px;
+  line-height: 1.1;
+  color: #1f2942;
+}
+
+.subtitle {
+  margin: 0;
+  color: #6c7893;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background: #d9dee7;
+  margin: 26px 0 20px;
+}
+
+.section-title {
+  color: #3c4660;
+  margin-bottom: 14px;
+}
+
+.portfolio-item {
+  background: #eef0f4;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  color: #2d354b;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 22px;
+  background: #4d8b43;
+  color: white;
+  font-size: 20px;
+  margin-top: 14px;
+}
+
+.mini-label {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  background: rgba(54, 54, 54, 0.85);
+  color: white;
+  padding: 11px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+  </style>
+</head>
+<body>
+  <div class="student-card layout-left has-badge">
+    <div class="badge">XI RPL</div>
+
+    <div class="content-top">
+      <div class="avatar">BS</div>
+      <div class="intro-text">
+        <h1>Budi<br>Santoso</h1>
+        <p class="subtitle">Siswa XI RPL |<br>Pecinta Olahraga</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2 class="section-title">Portofolio</h2>
+    <div class="portfolio-list">
+      <div class="portfolio-item">🧮 Aplikasi Catatan</div>
+      <div class="portfolio-item">🖥️ Website Sekolah</div>
+      <div class="portfolio-item">🎨 Desain Poster</div>
+    </div>
+
+    <button class="action-btn">Lihat Profil</button>
+  </div>
+</body>
+</html>`,
+        css: `body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e5e7eb;
+  font-family: Arial, sans-serif;
+}
+
+.student-card {
+  width: 360px;
+  background: #f6f7f9;
+  border-radius: 36px;
+  padding: 30px 22px 90px;
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.12);
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: 28px;
+  right: 22px;
+  background: #4d8b43;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: bold;
+}
+
+.content-top {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-top: 58px;
+}
+
+.avatar {
+  width: 145px;
+  height: 145px;
+  border-radius: 50%;
+  background: #c3c9d6;
+  border: 8px solid #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  font-weight: bold;
+  color: #4d566f;
+  flex-shrink: 0;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 36px;
+  line-height: 1.1;
+  color: #1f2942;
+}
+
+.subtitle {
+  margin: 0;
+  color: #6c7893;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background: #d9dee7;
+  margin: 26px 0 20px;
+}
+
+.section-title {
+  color: #3c4660;
+  margin-bottom: 14px;
+}
+
+.portfolio-item {
+  background: #eef0f4;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  color: #2d354b;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 22px;
+  background: #4d8b43;
+  color: white;
+  font-size: 20px;
+  margin-top: 14px;
+}
+
+.mini-label {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  background: rgba(54, 54, 54, 0.85);
+  color: white;
+  padding: 11px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}`
+      },
+      "dua-tombol": {
+        preview: `
+          <article class="student-card layout-top layout-two theme-a has-badge">
+            <div class="badge">XI RPL</div>
+            <div class="avatar-center"><div class="avatar">BS</div></div>
+            <div class="main-content intro">
+              <h4>Budi Santoso</h4>
+              <div class="subtitle">Siswa XI RPL | Pecinta Olahraga</div>
+              <div class="divider"></div>
+              <div class="section-title">Portofolio</div>
+              <div class="portfolio-list">
+                <div class="portfolio-item"><span class="icon">🧮</span><span>Aplikasi Catatan</span></div>
+                <div class="portfolio-item"><span class="icon">🖥️</span><span>Website Sekolah</span></div>
+                <div class="portfolio-item"><span class="icon">🎨</span><span>Desain Poster</span></div>
+              </div>
+              <div class="actions">
+                <button class="action-btn">Profil</button>
+                <button class="action-btn">Kontak</button>
+              </div>
+            </div>
+          </article>
+        `,
+        html: `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Card Dua Tombol</title>
+  <style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e5e7eb;
+  font-family: Arial, sans-serif;
+}
+
+.student-card {
+  width: 360px;
+  background: #f6f7f9;
+  border-radius: 36px;
+  padding: 28px 22px 90px;
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.12);
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: 30px;
+  right: 22px;
+  background: #4d8b43;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: bold;
+}
+
+.avatar-center {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #c3c9d6;
+  border: 8px solid #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 52px;
+  font-weight: bold;
+  color: #4d566f;
+}
+
+.intro {
+  text-align: center;
+  padding: 0 10px;
+}
+
+h1 {
+  margin: 22px 0 12px;
+  font-size: 42px;
+  color: #1f2942;
+}
+
+.subtitle {
+  color: #6c7893;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background: #d9dee7;
+  margin: 28px 0 20px;
+}
+
+.section-title {
+  text-align: left;
+  color: #3c4660;
+  margin-bottom: 14px;
+}
+
+.portfolio-item {
+  background: #eef0f4;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  text-align: left;
+  color: #2d354b;
+}
+
+.button-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.action-btn {
+  border: none;
+  border-radius: 22px;
+  background: #4d8b43;
+  color: white;
+  font-size: 20px;
+  padding: 18px;
+}
+
+.half {
+  width: 50%;
+}
+
+.mini-label {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  background: rgba(54, 54, 54, 0.85);
+  color: white;
+  padding: 11px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+  </style>
+</head>
+<body>
+  <div class="student-card has-badge">
+    <div class="badge">XI RPL</div>
+
+    <div class="avatar-center">
+      <div class="avatar">BS</div>
+    </div>
+
+    <div class="intro">
+      <h1>Budi Santoso</h1>
+      <p class="subtitle">Siswa XI RPL | Pecinta Olahraga</p>
+
+      <div class="divider"></div>
+
+      <h2 class="section-title">Portofolio</h2>
+      <div class="portfolio-list">
+        <div class="portfolio-item">🧮 Aplikasi Catatan</div>
+        <div class="portfolio-item">🖥️ Website Sekolah</div>
+        <div class="portfolio-item">🎨 Desain Poster</div>
+      </div>
+
+      <div class="button-row">
+        <button class="action-btn half">Profil</button>
+        <button class="action-btn half">Kontak</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`,
+        css: `body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e5e7eb;
+  font-family: Arial, sans-serif;
+}
+
+.student-card {
+  width: 360px;
+  background: #f6f7f9;
+  border-radius: 36px;
+  padding: 28px 22px 90px;
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.12);
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: 30px;
+  right: 22px;
+  background: #4d8b43;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: bold;
+}
+
+.avatar-center {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #c3c9d6;
+  border: 8px solid #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 52px;
+  font-weight: bold;
+  color: #4d566f;
+}
+
+.intro {
+  text-align: center;
+  padding: 0 10px;
+}
+
+h1 {
+  margin: 22px 0 12px;
+  font-size: 42px;
+  color: #1f2942;
+}
+
+.subtitle {
+  color: #6c7893;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background: #d9dee7;
+  margin: 28px 0 20px;
+}
+
+.section-title {
+  text-align: left;
+  color: #3c4660;
+  margin-bottom: 14px;
+}
+
+.portfolio-item {
+  background: #eef0f4;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  text-align: left;
+  color: #2d354b;
+}
+
+.button-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.action-btn {
+  border: none;
+  border-radius: 22px;
+  background: #4d8b43;
+  color: white;
+  font-size: 20px;
+  padding: 18px;
+}
+
+.half {
+  width: 50%;
+}
+
+.mini-label {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  background: rgba(54, 54, 54, 0.85);
+  color: white;
+  padding: 11px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}`
+      },
+      "glow-skill": {
+        preview: `
+          <article class="student-card layout-top layout-skill theme-a glow">
+            <div class="avatar-center"><div class="avatar">BS</div></div>
+            <div class="main-content intro">
+              <h4>Budi Santoso</h4>
+              <div class="subtitle">Siswa XI RPL | Pecinta Olahraga</div>
+              <div class="divider"></div>
+              <div class="section-title">Keahlian</div>
+              <div class="skill-list">
+                <div class="skill-item"><span class="icon">⚡</span><span>Web Design</span></div>
+                <div class="skill-item"><span class="icon">⚡</span><span>Mobile App</span></div>
+                <div class="skill-item"><span class="icon">⚡</span><span>UI/UX</span></div>
+              </div>
+              <div class="actions"><button class="action-btn">Lihat Profil</button></div>
+            </div>
+            <div class="glow-tag">✨ GLOW EFFECT</div>
+          </article>
+        `,
+        html: `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Card Glow Skill</title>
+  <style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e5e7eb;
+  font-family: Arial, sans-serif;
+}
+
+.student-card {
+  width: 360px;
+  background: #f6f7f9;
+  border-radius: 36px;
+  padding: 28px 22px 90px;
+  box-shadow: 0 0 30px rgba(240, 193, 69, 0.35), 0 18px 35px rgba(0, 0, 0, 0.12);
+  border: 2px solid rgba(240, 193, 69, 0.35);
+  position: relative;
+}
+
+.avatar-center {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #c3c9d6;
+  border: 8px solid #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 52px;
+  font-weight: bold;
+  color: #4d566f;
+}
+
+.intro {
+  text-align: center;
+  padding: 0 10px;
+}
+
+h1 {
+  margin: 22px 0 12px;
+  font-size: 42px;
+  color: #1f2942;
+}
+
+.subtitle {
+  color: #6c7893;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background: #d9dee7;
+  margin: 28px 0 20px;
+}
+
+.section-title {
+  text-align: left;
+  color: #3c4660;
+  margin-bottom: 14px;
+}
+
+.skill-item {
+  background: #eef0f4;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  text-align: left;
+  color: #2d354b;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 22px;
+  background: #4d8b43;
+  color: white;
+  font-size: 20px;
+  margin-top: 14px;
+}
+
+.glow-tag {
+  position: absolute;
+  right: 18px;
+  bottom: 68px;
+  background: #f0b33e;
+  color: black;
+  font-weight: bold;
+  padding: 14px 18px;
+  border-radius: 999px;
+  border: 3px solid white;
+}
+
+.mini-label {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  background: rgba(54, 54, 54, 0.85);
+  color: white;
+  padding: 11px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+  </style>
+</head>
+<body>
+  <div class="student-card glow-card">
+    <div class="avatar-center">
+      <div class="avatar">BS</div>
+    </div>
+
+    <div class="intro">
+      <h1>Budi Santoso</h1>
+      <p class="subtitle">Siswa XI RPL | Pecinta Olahraga</p>
+
+      <div class="divider"></div>
+
+      <h2 class="section-title">Keahlian</h2>
+      <div class="skill-list">
+        <div class="skill-item">⚡ Web Design</div>
+        <div class="skill-item">⚡ Mobile App</div>
+        <div class="skill-item">⚡ UI/UX</div>
+      </div>
+
+      <button class="action-btn">Lihat Profil</button>
+    </div>
+
+    <div class="glow-tag">✨ GLOW EFFECT</div>
+  </div>
+</body>
+</html>`,
+        css: `body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e5e7eb;
+  font-family: Arial, sans-serif;
+}
+
+.student-card {
+  width: 360px;
+  background: #f6f7f9;
+  border-radius: 36px;
+  padding: 28px 22px 90px;
+  box-shadow: 0 0 30px rgba(240, 193, 69, 0.35), 0 18px 35px rgba(0, 0, 0, 0.12);
+  border: 2px solid rgba(240, 193, 69, 0.35);
+  position: relative;
+}
+
+.avatar-center {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #c3c9d6;
+  border: 8px solid #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 52px;
+  font-weight: bold;
+  color: #4d566f;
+}
+
+.intro {
+  text-align: center;
+  padding: 0 10px;
+}
+
+h1 {
+  margin: 22px 0 12px;
+  font-size: 42px;
+  color: #1f2942;
+}
+
+.subtitle {
+  color: #6c7893;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background: #d9dee7;
+  margin: 28px 0 20px;
+}
+
+.section-title {
+  text-align: left;
+  color: #3c4660;
+  margin-bottom: 14px;
+}
+
+.skill-item {
+  background: #eef0f4;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  text-align: left;
+  color: #2d354b;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 22px;
+  background: #4d8b43;
+  color: white;
+  font-size: 20px;
+  margin-top: 14px;
+}
+
+.glow-tag {
+  position: absolute;
+  right: 18px;
+  bottom: 68px;
+  background: #f0b33e;
+  color: black;
+  font-weight: bold;
+  padding: 14px 18px;
+  border-radius: 999px;
+  border: 3px solid white;
+}
+
+.mini-label {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  background: rgba(54, 54, 54, 0.85);
+  color: white;
+  padding: 11px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}`
+      },
+      "progress": {
+        preview: `
+          <article class="student-card layout-left layout-progress theme-a">
+            <div class="main-content">
+              <div class="content-top">
+                <div class="avatar">BS</div>
+                <div class="intro">
+                  <h4>Budi<br>Santoso</h4>
+                  <div class="subtitle">Siswa XI RPL |<br>Pecinta Olahraga</div>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="section-title">Portofolio & Skill</div>
+              <div class="progress-list">
+                <div class="progress-item">
+                  <div class="progress-head"><span>Web</span><strong>80%</strong></div>
+                  <div class="track"><div class="bar" style="width:80%"></div></div>
+                </div>
+                <div class="progress-item">
+                  <div class="progress-head"><span>Mobile</span><strong>65%</strong></div>
+                  <div class="track"><div class="bar" style="width:65%"></div></div>
+                </div>
+                <div class="progress-item">
+                  <div class="progress-head"><span>UI/UX</span><strong>90%</strong></div>
+                  <div class="track"><div class="bar" style="width:90%"></div></div>
+                </div>
+              </div>
+              <div class="actions"><button class="action-btn">Lihat Profil</button></div>
+            </div>
+          </article>
+        `,
+        html: `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Card Progress Bar</title>
+  <style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e5e7eb;
+  font-family: Arial, sans-serif;
+}
+
+.student-card {
+  width: 360px;
+  background: #f6f7f9;
+  border-radius: 36px;
+  padding: 30px 22px 90px;
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.12);
+  position: relative;
+}
+
+.content-top {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.avatar {
+  width: 145px;
+  height: 145px;
+  border-radius: 50%;
+  background: #c3c9d6;
+  border: 8px solid #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  font-weight: bold;
+  color: #4d566f;
+  flex-shrink: 0;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 36px;
+  line-height: 1.1;
+  color: #1f2942;
+}
+
+.subtitle {
+  margin: 0;
+  color: #6c7893;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background: #d9dee7;
+  margin: 26px 0 20px;
+}
+
+.section-title {
+  color: #3c4660;
+  margin-bottom: 14px;
+}
+
+.progress-box {
+  background: #eef0f4;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 14px;
+}
+
+.progress-box p {
+  margin: 0 0 12px;
+  display: flex;
+  justify-content: space-between;
+  color: #2d354b;
+}
+
+.track {
+  width: 100%;
+  height: 12px;
+  background: #d7dde6;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  background: #62a657;
+  border-radius: 999px;
+}
+
+.web { width: 80%; }
+.mobile { width: 65%; }
+.uiux { width: 90%; }
+
+.action-btn {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 22px;
+  background: #4d8b43;
+  color: white;
+  font-size: 20px;
+  margin-top: 14px;
+}
+
+.mini-label {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  background: rgba(54, 54, 54, 0.85);
+  color: white;
+  padding: 11px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+  </style>
+</head>
+<body>
+  <div class="student-card progress-card">
+    <div class="content-top">
+      <div class="avatar">BS</div>
+      <div class="intro-text">
+        <h1>Budi<br>Santoso</h1>
+        <p class="subtitle">Siswa XI RPL |<br>Pecinta Olahraga</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2 class="section-title">Portofolio &amp; Skill</h2>
+    <div class="progress-box">
+      <p>Web <span>80%</span></p>
+      <div class="track"><div class="bar web"></div></div>
+    </div>
+    <div class="progress-box">
+      <p>Mobile <span>65%</span></p>
+      <div class="track"><div class="bar mobile"></div></div>
+    </div>
+    <div class="progress-box">
+      <p>UI/UX <span>90%</span></p>
+      <div class="track"><div class="bar uiux"></div></div>
+    </div>
+
+    <button class="action-btn">Lihat Profil</button>
+  </div>
+</body>
+</html>`,
+        css: `body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e5e7eb;
+  font-family: Arial, sans-serif;
+}
+
+.student-card {
+  width: 360px;
+  background: #f6f7f9;
+  border-radius: 36px;
+  padding: 30px 22px 90px;
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.12);
+  position: relative;
+}
+
+.content-top {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.avatar {
+  width: 145px;
+  height: 145px;
+  border-radius: 50%;
+  background: #c3c9d6;
+  border: 8px solid #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  font-weight: bold;
+  color: #4d566f;
+  flex-shrink: 0;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 36px;
+  line-height: 1.1;
+  color: #1f2942;
+}
+
+.subtitle {
+  margin: 0;
+  color: #6c7893;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background: #d9dee7;
+  margin: 26px 0 20px;
+}
+
+.section-title {
+  color: #3c4660;
+  margin-bottom: 14px;
+}
+
+.progress-box {
+  background: #eef0f4;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 14px;
+}
+
+.progress-box p {
+  margin: 0 0 12px;
+  display: flex;
+  justify-content: space-between;
+  color: #2d354b;
+}
+
+.track {
+  width: 100%;
+  height: 12px;
+  background: #d7dde6;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  background: #62a657;
+  border-radius: 999px;
+}
+
+.web { width: 80%; }
+.mobile { width: 65%; }
+.uiux { width: 90%; }
+
+.action-btn {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 22px;
+  background: #4d8b43;
+  color: white;
+  font-size: 20px;
+  margin-top: 14px;
+}
+
+.mini-label {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  background: rgba(54, 54, 54, 0.85);
+  color: white;
+  padding: 11px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}`
+      }
+    };
+
+    const previewArea = document.getElementById('preview-area');
+    const htmlCode = document.getElementById('html-code');
+    const cssCode = document.getElementById('css-code');
+    const tabs = document.querySelectorAll('.template-tab');
+
+    function setTemplate(name) {
+      const data = templates[name];
+      previewArea.innerHTML = data.preview;
+      htmlCode.textContent = data.html;
+      cssCode.textContent = data.css;
+      tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.template === name));
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => setTemplate(tab.dataset.template));
+    });
+
+    document.querySelectorAll('.copy-btn').forEach(button => {
+      button.addEventListener('click', async () => {
+        const targetId = button.dataset.copy;
+        const text = document.getElementById(targetId).textContent;
+        try {
+          await navigator.clipboard.writeText(text);
+          const oldText = button.textContent;
+          button.textContent = 'Tersalin';
+          setTimeout(() => button.textContent = oldText, 1400);
+        } catch (err) {
+          button.textContent = 'Gagal';
+          setTimeout(() => button.textContent = 'Copy', 1400);
+        }
+      });
+    });
+
+    setTemplate('header-badge');
+  </script>
 </body>
 </html>
